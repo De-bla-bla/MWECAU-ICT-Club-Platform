@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .header {
+            background-color: #f39c12;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+        }
+        .alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .countdown {
+            background-color: #e8f4f8;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Profile Picture Upload Reminder</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{ user.full_name }},</p>
+            
+            <div class="alert">
+                <strong>⚠️ Important Reminder:</strong> Your 72-hour profile picture upload deadline is approaching!
+            </div>
+            
+            <div class="countdown">
+                <p><strong>Time Remaining:</strong> {{ time_remaining }}</p>
+                <p><strong>Deadline:</strong> {{ deadline_date }} at {{ deadline_time }}</p>
+            </div>
+            
+            <p>As a member of MWECAU ICT Club, you are required to upload a profile picture within 72 hours of your account approval. This is an important part of completing your member profile.</p>
+            
+            <p><strong>Why is this important?</strong></p>
+            <ul>
+                <li>Helps identify members in the club directory</li>
+                <li>Enhances your member profile</li>
+                <li>Required for full access to club features</li>
+            </ul>
+            
+            <p><strong>What to do:</strong></p>
+            <ol>
+                <li>Log in to your account immediately</li>
+                <li>Go to "Upload Picture" in your dashboard</li>
+                <li>Select a clear, professional photo (JPG, PNG, or similar format)</li>
+                <li>Upload and confirm</li>
+            </ol>
+            
+            <a href="{{ upload_picture_url }}" class="button">Upload Picture Now</a>
+            
+            <p style="margin-top: 25px;"><strong>Note:</strong> After the deadline passes, you may lose access to certain club features until the picture is uploaded. We encourage you to complete this step as soon as possible.</p>
+            
+            <p>If you have any questions, please reach out to the club administration.</p>
+            
+            <p>Best regards,<br>
+            <strong>MWECAU ICT Club Leadership</strong></p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 MWECAU ICT Club. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
