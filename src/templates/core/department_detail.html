@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ department.name }} - ICT Club{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h2>{{ department.name }}</h2>
+            <p class="lead text-muted">{{ department.description }}</p>
+            
+            {% if department.leader %}
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Department Leader</h6>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>{{ department.leader.full_name }}</strong></p>
+                        <p class="small text-muted">{{ department.leader.email }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Members</h5>
+                    <h2 class="text-primary">{{ members_count }}</h2>
+                    <p class="text-muted">Active members</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if projects %}
+        <h3 class="mb-4">Featured Projects</h3>
+        <div class="row g-4 mb-5">
+            {% for project in projects %}
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'core:project_detail' project.slug %}" class="btn btn-sm btn-primary">View Project</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
