@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Announcements - ICT Club{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="mb-4">Announcements</h2>
+            
+            {% for announcement in announcements %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ announcement.title }}</h5>
+                        <p class="card-text">{{ announcement.content }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Posted on {{ announcement.created_at|date:"M d, Y H:i" }}
+                                {% if announcement.announcement_type != 'general' %}
+                                    · <span class="badge bg-info">{{ announcement.get_announcement_type_display }}</span>
+                                {% endif %}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="alert alert-info">No announcements at this time.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
