@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Departments - ICT Club{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-5">Our Departments</h2>
+    
+    <div class="row g-4">
+        {% for department in departments %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-folder me-2"></i>{{ department.name }}
+                        </h5>
+                        <p class="card-text text-muted">{{ department.description }}</p>
+                        <p class="small text-primary">
+                            <i class="fas fa-users me-1"></i>{{ department.members.count }} members
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'core:department_detail' department.slug %}" class="btn btn-sm btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
