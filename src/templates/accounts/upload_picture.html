@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Profile Picture - ICT Club{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Profile Picture Required!</h4>
+                <p>You have <strong>{{ hours_remaining.total_seconds|floatformat:0 }}  hours</strong> remaining to upload your profile picture.</p>
+                <hr>
+                <p class="mb-0">Your picture must be uploaded within 72 hours of registration to complete your membership.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Upload Profile Picture</h2>
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.picture.id_for_label }}" class="form-label">Select Image</label>
+                            {{ form.picture }}
+                            {% if form.picture.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.picture.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted d-block mt-2">Supported formats: JPEG, PNG, GIF (Max 5MB)</small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Upload Picture</button>
+                        <a href="{% url 'accounts:member_dashboard' %}" class="btn btn-secondary">Skip for Now</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
