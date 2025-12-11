@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Member Dashboard - ICT Club{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-tachometer-alt me-2"></i>Welcome, {{ user.full_name }}</h2>
+            <p class="text-muted">Manage your ICT Club membership</p>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if user.is_approved %}
+                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Account Approved</span>
+            {% else %}
+                <span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i>Pending Approval</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Department</h6>
+                    <h4 class="mb-0">
+                        <i class="fas fa-sitemap me-2 text-primary"></i>{{ user.department.name }}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Registration Number</h6>
+                    <h4 class="mb-0">
+                        <i class="fas fa-id-card me-2 text-primary"></i>{{ user.reg_number }}
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    {% if user.picture %}
+                        <img src="{{ user.picture.url }}" alt="Profile Picture" class="rounded-circle mb-3" width="120" height="120">
+                        <p class="text-success small"><i class="fas fa-check-circle me-1"></i>Picture Uploaded</p>
+                    {% else %}
+                        <div class="rounded-circle mx-auto mb-3 bg-light d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                            <i class="fas fa-camera text-muted" style="font-size: 2rem;"></i>
+                        </div>
+                        {% if time_until_deadline %}
+                            {% if time_until_deadline.total_seconds > 0 %}
+                                <p class="text-warning small">
+                                    <i class="fas fa-hourglass-half me-1"></i>
+                                    Upload picture in {{ time_until_deadline|timesince }}
+                                </p>
+                            {% else %}
+                                <p class="text-danger small">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Picture upload overdue!
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    
+                    <a href="{% url 'accounts:upload_picture' %}" class="btn btn-sm btn-primary w-100 mt-3">
+                        <i class="fas fa-upload me-1"></i>{{ user.picture|yesno:"Update,Upload" }} Picture
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Full Name</strong>
+                            <p>{{ user.full_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email</strong>
+                            <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Course</strong>
+                            <p>
+                                {% if user.course %}
+                                    {{ user.course.name }}
+                                {% elif user.course_other %}
+                                    {{ user.course_other }}
+                                {% else %}
+                                    Not specified
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Joined</strong>
+                            <p>{{ user.registered_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">
+                        <i class="fas fa-edit me-1"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Status -->
+    {% if not user.is_approved %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Account Pending Approval</strong><br>
+        Your account is currently pending approval from the club leadership. You'll receive an email once your account is approved.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+
+    <!-- Member Resources -->
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="fas fa-cube me-2"></i>Department Resources</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">Access resources specific to your department</p>
+            
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card border-light">
+                        <div class="card-body">
+                            <h6><i class="fas fa-book me-2 text-primary"></i>Department Info</h6>
+                            <p class="small text-muted">Learn more about {{ user.department.name }}</p>
+                            <a href="{% url 'core:department_detail' user.department.slug %}" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-light">
+                        <div class="card-body">
+                            <h6><i class="fas fa-users me-2 text-primary"></i>Department Members</h6>
+                            <p class="small text-muted">Connect with other members</p>
+                            <button class="btn btn-sm btn-outline-primary disabled">
+                                Coming Soon
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
