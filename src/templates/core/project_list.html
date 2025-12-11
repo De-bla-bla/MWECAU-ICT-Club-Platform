@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - ICT Club{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Club Projects</h2>
+    
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <form method="get" class="d-flex">
+                <select name="department" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Departments</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.slug }}" {% if request.GET.department == dept.slug %}selected{% endif %}>
+                            {{ dept.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        {% for project in projects %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text text-muted">{{ project.description|truncatewords:15 }}</p>
+                        {% if project.featured %}
+                            <span class="badge bg-warning">Featured</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{% url 'core:project_detail' project.slug %}" class="btn btn-sm btn-primary">View Details</a>
+                        {% if project.github_url %}
+                            <a href="{{ project.github_url }}" target="_blank" class="btn btn-sm btn-dark">GitHub</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No projects found.</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
