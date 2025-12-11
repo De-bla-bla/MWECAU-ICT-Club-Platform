@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+        }
+        .announcement-box {
+            background-color: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📢 Club Announcement</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{ recipient_name }},</p>
+            
+            <p>We have an important announcement to share with you:</p>
+            
+            <div class="announcement-box">
+                <h2>{{ announcement_title }}</h2>
+                <p>{{ announcement_type_display }}</p>
+            </div>
+            
+            <p>{{ announcement_content }}</p>
+            
+            <a href="{{ announcement_url }}" class="button">View Full Announcement</a>
+            
+            <p style="margin-top: 25px;">For more information, please visit the club portal or reach out to the club leadership team.</p>
+            
+            <p>Best regards,<br>
+            <strong>MWECAU ICT Club Leadership</strong></p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 MWECAU ICT Club. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
