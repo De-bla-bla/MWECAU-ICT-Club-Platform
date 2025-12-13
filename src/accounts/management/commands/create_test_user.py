@@ -57,8 +57,8 @@ class Command(BaseCommand):
                     self.style.WARNING(f'⚠ Course "{course_name}" does not exist, skipping course assignment')
                 )
 
-        # Generate username from email (username is required by AbstractUser)
-        username = email.split('@')[0]
+        # Generate username from registration number
+        username = reg_number.upper()
         
         # Create user
         user = CustomUser.objects.create_user(
