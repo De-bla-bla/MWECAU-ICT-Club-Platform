@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.utils import timezone
+from django.urls import reverse
+from django.db.models import Q
 from .models import CustomUser, Department, Course
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
@@ -31,7 +33,7 @@ class CustomUserAdmin(BaseUserAdmin):
     add_form = CustomUserCreationForm
     
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
+        (None, {'fields': ('username', 'password_display')}),
         ('Personal Info', {
             'fields': ('full_name', 'email', 'reg_number', 'picture', 'picture_uploaded_at')
         }),
@@ -80,9 +82,24 @@ class CustomUserAdmin(BaseUserAdmin):
     )
     search_fields = ('full_name', 'email', 'reg_number', 'username')
     ordering = ('-registered_at',)
-    readonly_fields = ('registered_at', 'approved_at', 'picture_uploaded_at', 'date_joined', 'last_login')
+    readonly_fields = ('registered_at', 'approved_at', 'picture_uploaded_at', 'date_joined', 'last_login', 'password_display')
     
     actions = ['approve_members', 'reject_members', 'send_picture_reminder']
+    
+    def password_display(self, obj):
+        """Display password information with change password link"""
+        if obj.pk:
+            change_url = reverse('accounts:password_change')
+            return format_html(
+                '<div style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; border-left: 4px solid #ffc107;">'
+                '<p style="margin: 0 0 8px 0; font-weight: 500;">No password set.</p>'
+                '<p style="margin: 0 0 12px 0; color: #666; font-size: 13px;">Raw passwords are not stored, so there is no way to see this user\'s password, but you can change the password using the button below.</p>'
+                '<a href="{}" class="button" style="background-color: #ffc107; color: black; padding: 5px 15px; text-decoration: none; border-radius: 3px; display: inline-block;">Change Password</a>'
+                '</div>',
+                change_url
+            )
+        return '-'
+    password_display.short_description = 'Password'
     
     def is_approved_badge(self, obj):
         """Display approval status as a colored badge"""
