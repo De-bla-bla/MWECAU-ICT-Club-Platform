@@ -80,6 +80,15 @@ class EmailService:
             
             # Render HTML template
             context = context or {}
+            
+            # Validate template path
+            if not html_template:
+                error_msg = "Email template path cannot be empty or None"
+                logger.error(error_msg)
+                if not fail_silently:
+                    raise ValueError(error_msg)
+                return False, error_msg
+            
             try:
                 html_message = render_to_string(html_template, context)
             except Exception as e:

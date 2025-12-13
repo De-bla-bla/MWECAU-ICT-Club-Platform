@@ -90,7 +90,8 @@ class Command(BaseCommand):
         if not subject:
             raise CommandError('--subject is required for announcement type')
         
-        template = options.get('template', 'emails/announcement.html')
+        # Ensure template has a default value
+        template = options.get('template') or 'emails/announcement.html'
         message = options.get('message', '')
         
         # Determine recipients based on target
@@ -146,7 +147,8 @@ class Command(BaseCommand):
         if not subject:
             raise CommandError('--subject is required for manual type')
         
-        template = options.get('template', 'emails/announcement.html')
+        # Ensure template has a default value
+        template = options.get('template') or 'emails/announcement.html'
         message = options.get('message', '')
         
         # Parse recipients

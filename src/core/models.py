@@ -75,7 +75,6 @@ class Announcement(models.Model):
         ('general', 'General'),
         ('department', 'Department Specific'),
         ('event', 'Event'),
-        ('payment', 'Payment Related'),
         ('urgent', 'Urgent'),
     ]
     

@@ -55,15 +55,3 @@ def get_user_status_badge(user):
         return 'danger', 'Picture Overdue'
     else:
         return 'success', 'Active'
-
-
-def get_payment_status_badge(payment):
-    """Get status badge for payment"""
-    status_colors = {
-        'pending': 'warning',
-        'processing': 'info',
-        'success': 'success',
-        'failed': 'danger',
-        'cancelled': 'secondary',
-    }
-    return status_colors.get(payment.status, 'secondary'), payment.get_status_display()
