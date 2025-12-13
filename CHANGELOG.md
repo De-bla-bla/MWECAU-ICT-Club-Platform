@@ -8,10 +8,6 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## Unreleased
 
-### Added
-- MIT License for open-source distribution
-- License reference in README
-
 ### Planned Features
 - REST API for third-party integrations
 - Mobile app (React Native)
