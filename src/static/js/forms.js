@@ -1,166 +1,260 @@
-"""
-Frontend form utilities and JavaScript helper functions
-"""
-from django.forms import ModelForm, Form
-from django.forms.widgets import DateInput, TimeInput, EmailInput
+/**
+ * Frontend form utilities and enhancement functions
+ * Provides form validation, password strength checking, and field interactions
+ */
 
+// Form Validation Helper
+const FormValidation = {
+    /**
+     * Validate email format
+     * @param {string} email - Email address to validate
+     * @returns {boolean} - True if valid email
+     */
+    isValidEmail: function(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    },
 
-class FormValidationHelper:
-    """Helper class for form validation on frontend"""
-    
-    @staticmethod
-    def get_form_errors_as_json(form):
-        """Convert form errors to JSON format"""
-        import json
-        
-        errors = {}
-        for field, error_list in form.errors.items():
-            errors[field] = [str(e) for e in error_list]
-        
-        return json.dumps(errors)
-    
-    @staticmethod
-    def get_field_errors(form, field_name):
-        """Get errors for specific field"""
-        if field_name in form.errors:
-            return list(form.errors[field_name])
-        return []
-    
-    @staticmethod
-    def has_form_errors(form):
-        """Check if form has any errors"""
-        return bool(form.errors)
+    /**
+     * Validate required field
+     * @param {string} value - Field value to validate
+     * @returns {boolean} - True if field is not empty
+     */
+    isRequired: function(value) {
+        return value.trim() !== '';
+    },
 
+    /**
+     * Validate password strength
+     * @param {string} password - Password to validate
+     * @returns {object} - Strength level and feedback
+     */
+    checkPasswordStrength: function(password) {
+        let strength = 0;
+        const feedback = [];
 
-class FormHelperMixin:
-    """Mixin for form helper methods"""
-    
-    def add_css_class(self, field_name, css_class):
-        """Add CSS class to form field"""
-        if field_name in self.fields:
-            self.fields[field_name].widget.attrs['class'] = css_class
-    
-    def add_placeholder(self, field_name, placeholder):
-        """Add placeholder text to form field"""
-        if field_name in self.fields:
-            self.fields[field_name].widget.attrs['placeholder'] = placeholder
-    
-    def add_help_text(self, field_name, help_text):
-        """Add help text to form field"""
-        if field_name in self.fields:
-            self.fields[field_name].help_text = help_text
-    
-    def make_field_required(self, field_name):
-        """Make field required"""
-        if field_name in self.fields:
-            self.fields[field_name].required = True
-    
-    def make_field_optional(self, field_name):
-        """Make field optional"""
-        if field_name in self.fields:
-            self.fields[field_name].required = False
-    
-    def add_bootstrap_classes(self):
-        """Add Bootstrap classes to all form fields"""
-        for field_name in self.fields:
-            widget = self.fields[field_name].widget
-            current_class = widget.attrs.get('class', '')
-            widget.attrs['class'] = f'{current_class} form-control'.strip()
+        if (password.length >= 8) strength++;
+        else feedback.push('At least 8 characters');
 
+        if (password.length >= 12) strength++;
+        else if (password.length >= 8) feedback.push('12+ characters recommended');
 
-class BootstrapFormMixin:
-    """Mixin to add Bootstrap styling to forms"""
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Add Bootstrap classes to all fields
-        for field_name, field in self.fields.items():
-            widget = field.widget
-            widget.attrs['class'] = 'form-control'
-            
-            # Add specific classes based on widget type
-            if hasattr(widget, 'input_type'):
-                if widget.input_type in ['checkbox', 'radio']:
-                    widget.attrs['class'] = 'form-check-input'
-            
-            # Add required attribute
-            if field.required:
-                widget.attrs['required'] = True
+        if (/[a-z]/.test(password)) strength++;
+        else feedback.push('Add lowercase letters');
 
+        if (/[A-Z]/.test(password)) strength++;
+        else feedback.push('Add uppercase letters');
 
-class FormErrorDisplay:
-    """Helper for displaying form errors"""
-    
-    @staticmethod
-    def get_form_error_html(form):
-        """Get HTML for form errors"""
-        if not form.errors:
-            return ''
-        
-        html = '<div class="alert alert-danger" role="alert"><ul>'
-        
-        for field, errors in form.errors.items():
-            for error in errors:
-                html += f'<li>{field}: {error}</li>'
-        
-        html += '</ul></div>'
-        return html
-    
-    @staticmethod
-    def get_field_error_html(form, field_name):
-        """Get HTML for specific field errors"""
-        errors = FormValidationHelper.get_field_errors(form, field_name)
-        
-        if not errors:
-            return ''
-        
-        html = '<div class="invalid-feedback" style="display: block;">'
-        
-        for error in errors:
-            html += f'<span>{error}</span><br>'
-        
-        html += '</div>'
-        return html
+        if (/[0-9]/.test(password)) strength++;
+        else feedback.push('Add numbers');
 
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+        else feedback.push('Add special characters');
 
-class AjaxFormHelper:
-    """Helper for AJAX form submission"""
-    
-    @staticmethod
-    def get_form_data_for_ajax(form):
-        """Get form data in format suitable for AJAX"""
-        import json
-        
-        data = {}
-        for field_name, field in form.fields.items():
-            if field_name in form.data:
-                data[field_name] = form.data[field_name]
-        
-        return json.dumps(data)
-    
-    @staticmethod
-    def create_ajax_response(success, message, data=None):
-        """Create AJAX response object"""
-        import json
-        
-        response = {
-            'success': success,
-            'message': message
+        const levels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+        const colors = ['danger', 'warning', 'warning', 'info', 'success', 'success'];
+
+        return {
+            level: levels[strength] || 'Very Weak',
+            strength: strength,
+            color: colors[strength] || 'danger',
+            feedback: feedback
+        };
+    },
+
+    /**
+     * Validate form field
+     * @param {HTMLElement} field - Form field element
+     * @returns {boolean} - True if field is valid
+     */
+    validateField: function(field) {
+        const value = field.value;
+        let isValid = true;
+
+        // Check if field is required
+        if (field.hasAttribute('required')) {
+            isValid = this.isRequired(value);
         }
+
+        // Check email fields
+        if (field.type === 'email' && value) {
+            isValid = this.isValidEmail(value);
+        }
+
+        // Check password match for password confirmation fields
+        if (field.classList.contains('password-confirm')) {
+            const passwordField = document.querySelector('[name="password"]');
+            if (passwordField) {
+                isValid = field.value === passwordField.value;
+            }
+        }
+
+        return isValid;
+    }
+};
+
+// Password Strength Indicator
+const PasswordStrengthIndicator = {
+    /**
+     * Initialize password strength indicator for password fields
+     */
+    init: function() {
+        const passwordInputs = document.querySelectorAll('input[type="password"][name="password"]');
         
-        if data:
-            response['data'] = data
+        passwordInputs.forEach(input => {
+            // Create strength meter if it doesn't exist
+            if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('password-strength-meter')) {
+                const meter = document.createElement('div');
+                meter.className = 'password-strength-meter mt-2';
+                meter.innerHTML = `
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar" id="strength-bar-${input.id || 'password'}" style="width: 0%;"></div>
+                    </div>
+                    <small class="password-strength-text d-block mt-1"></small>
+                `;
+                input.parentNode.insertBefore(meter, input.nextSibling);
+            }
+
+            // Update strength on input
+            input.addEventListener('input', () => {
+                this.updateStrength(input);
+            });
+        });
+    },
+
+    /**
+     * Update password strength display
+     * @param {HTMLElement} input - Password input field
+     */
+    updateStrength: function(input) {
+        const strength = FormValidation.checkPasswordStrength(input.value);
+        const meterId = input.id || 'password';
+        const strengthBar = document.querySelector(`#strength-bar-${meterId}`);
+        const strengthText = input.parentNode.querySelector('.password-strength-text');
+
+        if (strengthBar) {
+            const width = (strength.strength / 6) * 100;
+            strengthBar.style.width = width + '%';
+            strengthBar.className = `progress-bar bg-${strength.color}`;
+        }
+
+        if (strengthText) {
+            strengthText.innerHTML = `
+                <strong>Strength:</strong> ${strength.level}
+                ${strength.feedback.length > 0 ? '<br>' + strength.feedback.join(', ') : ''}
+            `;
+            strengthText.className = `password-strength-text d-block mt-1 text-${strength.color}`;
+        }
+    }
+};
+
+// Form Error Display
+const FormErrorDisplay = {
+    /**
+     * Display field error
+     * @param {HTMLElement} field - Form field
+     * @param {string} message - Error message
+     */
+    showError: function(field, message) {
+        // Remove existing error
+        this.clearError(field);
+
+        // Add error class to field
+        field.classList.add('is-invalid');
+
+        // Create and insert error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'invalid-feedback d-block';
+        errorDiv.textContent = message;
+        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+    },
+
+    /**
+     * Clear field error
+     * @param {HTMLElement} field - Form field
+     */
+    clearError: function(field) {
+        field.classList.remove('is-invalid');
+        const errorMsg = field.parentNode.querySelector('.invalid-feedback');
+        if (errorMsg) {
+            errorMsg.remove();
+        }
+    },
+
+    /**
+     * Clear all form errors
+     * @param {HTMLElement} form - Form element
+     */
+    clearAllErrors: function(form) {
+        const fields = form.querySelectorAll('.is-invalid');
+        fields.forEach(field => {
+            this.clearError(field);
+        });
+    }
+};
+
+// Form Handler
+const FormHandler = {
+    /**
+     * Initialize form handlers
+     */
+    init: function() {
+        PasswordStrengthIndicator.init();
+        this.setupFormValidation();
+    },
+
+    /**
+     * Setup real-time form validation
+     */
+    setupFormValidation: function() {
+        const forms = document.querySelectorAll('form');
         
-        return json.dumps(response)
-    
-    @staticmethod
-    def create_error_response(form):
-        """Create AJAX response with form errors"""
-        import json
-        
-        return json.dumps({
-            'success': False,
-            'message': 'Form validation failed',
-            'errors': {field: list(errors) for field, errors in form.errors.items()}
-        })
+        forms.forEach(form => {
+            // Validate on blur
+            const fields = form.querySelectorAll('input, textarea, select');
+            fields.forEach(field => {
+                field.addEventListener('blur', () => {
+                    const isValid = FormValidation.validateField(field);
+                    if (!isValid && field.hasAttribute('required')) {
+                        FormErrorDisplay.showError(field, 'This field is required');
+                    } else {
+                        FormErrorDisplay.clearError(field);
+                    }
+                });
+
+                // Clear error on input
+                field.addEventListener('input', () => {
+                    if (field.classList.contains('is-invalid')) {
+                        const isValid = FormValidation.validateField(field);
+                        if (isValid) {
+                            FormErrorDisplay.clearError(field);
+                        }
+                    }
+                });
+            });
+
+            // Validate on submit
+            form.addEventListener('submit', (e) => {
+                FormErrorDisplay.clearAllErrors(form);
+                let isFormValid = true;
+
+                fields.forEach(field => {
+                    const isValid = FormValidation.validateField(field);
+                    if (!isValid && field.hasAttribute('required')) {
+                        FormErrorDisplay.showError(field, 'This field is required');
+                        isFormValid = false;
+                    }
+                });
+
+                if (!isFormValid) {
+                    e.preventDefault();
+                }
+            });
+        });
+    }
+};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    FormHandler.init();
+});
