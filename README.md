@@ -465,8 +465,9 @@ python manage.py collectstatic --noinput
 
 ## License
 
-This project is proprietary to Mwenge Catholic University ICT Club.  
-All rights reserved © 2025
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+MIT License Copyright (c) 2025 Mwenge Catholic University ICT Club
 
 ---
 
