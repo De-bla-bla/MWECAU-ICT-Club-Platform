@@ -437,6 +437,93 @@ footer a:hover {
 }
 
 /* Print Styles */
+/* Password Strength Indicator */
+.password-strength-container {
+    margin-top: 1rem;
+}
+
+.password-strength-bar {
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.password-strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    border-radius: 3px;
+}
+
+.password-strength-fill.weak {
+    background-color: #dc3545;
+}
+
+.password-strength-fill.good {
+    background-color: #ffc107;
+}
+
+.password-strength-fill.strong {
+    background-color: #28a745;
+}
+
+.password-strength-text {
+    color: #6c757d;
+}
+
+.strength-weak {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.strength-good {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+.strength-strong {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.password-requirements {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+    border-left: 3px solid #dee2e6;
+    border-radius: 0.25rem;
+}
+
+.password-requirements li {
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease;
+}
+
+.password-requirements li.met {
+    color: #28a745;
+}
+
+.password-requirements li.unmet {
+    color: #6c757d;
+}
+
+.req-icon {
+    display: inline-block;
+    width: 20px;
+    margin-right: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.password-requirements li.met .req-icon {
+    color: #28a745;
+}
+
+.password-requirements li.unmet .req-icon {
+    color: #dc3545;
+}
+
 @media print {
     .navbar,
     footer,

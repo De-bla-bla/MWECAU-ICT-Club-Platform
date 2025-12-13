@@ -3,43 +3,38 @@ Management command to set up departments
 Usage: python manage.py setup_departments
 """
 from django.core.management.base import BaseCommand
+from django.utils.text import slugify
 from accounts.models import Department
 
 
 class Command(BaseCommand):
-    help = 'Set up default departments for ICT Club'
+    help = 'Set up MWECAU ICT Club departments'
 
     def handle(self, *args, **options):
         departments_data = [
             {
                 'name': 'Programming',
-                'description': 'Software development in Python, JavaScript, PHP, etc.',
-                'color': '#0066cc'
+                'description': 'Software development in Python, JavaScript, PHP, and other languages.'
             },
             {
                 'name': 'Cybersecurity',
-                'description': 'Ethical hacking, digital forensics, and secure computing.',
-                'color': '#cc0000'
+                'description': 'Ethical hacking, digital forensics, information security, and secure computing.'
             },
             {
                 'name': 'Networking',
-                'description': 'Design and implementation of robust networks.',
-                'color': '#00cc00'
+                'description': 'Network design, implementation, and management for robust connectivity.'
             },
             {
                 'name': 'Computer Maintenance',
-                'description': 'Hardware/software troubleshooting and repair.',
-                'color': '#ffcc00'
+                'description': 'Hardware and software troubleshooting, repair, and system optimization.'
             },
             {
                 'name': 'Graphic Design',
-                'description': 'Visual design using Adobe tools & Canva.',
-                'color': '#00ccff'
+                'description': 'Visual design and digital art using Adobe Creative Suite and Canva.'
             },
             {
                 'name': 'AI & Machine Learning',
-                'description': 'AI-driven automation and intelligent prototyping.',
-                'color': '#9900cc'
+                'description': 'Artificial intelligence, machine learning, and intelligent data automation.'
             },
         ]
 
@@ -47,8 +42,8 @@ class Command(BaseCommand):
             dept, created = Department.objects.get_or_create(
                 name=dept_data['name'],
                 defaults={
+                    'slug': slugify(dept_data['name']),
                     'description': dept_data['description'],
-                    'color': dept_data['color']
                 }
             )
             
@@ -61,4 +56,4 @@ class Command(BaseCommand):
                     self.style.WARNING(f'→ Department already exists: {dept.name}')
                 )
 
-        self.stdout.write(self.style.SUCCESS('\n✓ Department setup complete!'))
+        self.stdout.write(self.style.SUCCESS('\n✓ Departments setup complete!'))

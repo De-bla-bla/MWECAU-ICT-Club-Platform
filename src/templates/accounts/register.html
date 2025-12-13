@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Register - ICT Club{% endblock %}
 
@@ -34,7 +35,7 @@
                                 </div>
                             {% endif %}
                             <small class="form-text text-muted d-block mt-1">
-                                Your university registration number (e.g., MWE/CS/2022/001)
+                                Format: T/XXXX/YYYY/NNNN (e.g., T/DEG/2025/001)
                             </small>
                         </div>
                         
@@ -48,6 +49,9 @@
                                     {{ form.full_name.errors.0 }}
                                 </div>
                             {% endif %}
+                            <small class="form-text text-muted d-block mt-1">
+                                FirstName LastName Surname (2-3 parts)
+                            </small>
                         </div>
                         
                         <div class="mb-3">
@@ -75,21 +79,6 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="{{ form.course_other.id_for_label }}" class="form-label">
-                                {{ form.course_other.label }}
-                            </label>
-                            {{ form.course_other }}
-                            {% if form.course_other.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.course_other.errors.0 }}
-                                </div>
-                            {% endif %}
-                            <small class="form-text text-muted d-block mt-1">
-                                If your course is not in the list above
-                            </small>
-                        </div>
-                        
-                        <div class="mb-3">
                             <label for="{{ form.department.id_for_label }}" class="form-label">
                                 {{ form.department.label }}
                             </label>
@@ -111,9 +100,6 @@
                                     {{ form.password1.errors.0 }}
                                 </div>
                             {% endif %}
-                            <small class="form-text text-muted d-block mt-1">
-                                {{ form.password1.help_text|safe }}
-                            </small>
                         </div>
                         
                         <div class="mb-4">
@@ -143,4 +129,6 @@
         </div>
     </div>
 </div>
+
+<script src="{% static 'js/password-strength.js' %}"></script>
 {% endblock %}

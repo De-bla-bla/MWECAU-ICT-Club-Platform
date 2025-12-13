@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.core.validators import RegexValidator
+from datetime import datetime
 
 
 class Department(models.Model):
@@ -37,15 +38,26 @@ class Department(models.Model):
 
 
 class Course(models.Model):
-    """Courses available in the system"""
+    """Courses available at MWECAU - ICT related only"""
     name = models.CharField(max_length=150, unique=True)
-    code = models.CharField(max_length=20, unique=True, blank=True, null=True)
+    code = models.CharField(max_length=20, blank=True)
+    level = models.CharField(
+        max_length=20,
+        default='DEG',
+        choices=[
+            ('DIP', 'Diploma'),
+            ('CERT', 'Certificate'),
+            ('DEG', 'Bachelor Degree'),
+            ('MASTER', 'Master Degree'),
+            ('PHD', 'Doctor of Philosophy'),
+        ]
+    )
     
     class Meta:
-        ordering = ['name']
+        ordering = ['level', 'name']
     
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.level})"
 
 
 class CustomUser(AbstractUser):
@@ -56,8 +68,8 @@ class CustomUser(AbstractUser):
         verbose_name='Registration Number',
         validators=[
             RegexValidator(
-                regex=r'^[A-Za-z0-9\-/]+$',
-                message='Registration number contains invalid characters'
+                regex=r'^T/(DEG|CERT|DIP|MASTER|PHD)/\d{4}/\d{3,4}$',
+                message='Format must be T/XXXX/YYYY/NNNN (e.g., T/DEG/2025/001)'
             )
         ]
     )

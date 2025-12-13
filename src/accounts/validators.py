@@ -1,53 +1,111 @@
 """
-Custom validation utilities and validators
+Custom validation utilities for registration
 """
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import re
+from datetime import datetime
 
 
-class RegistrationNumberValidator:
-    """Validate registration number format"""
+def validate_registration_number(value):
+    """
+    Validate registration number format: T/XXXX/YYYY/NNNN
+    Example: T/DEG/2025/001, T/CERT/2024/045, T/PHD/2025/1003
+    Year must be between 2020 and current year (or next year if October+)
+    """
+    pattern = r'^T/(DEG|CERT|DIP|MASTER|PHD)/(\d{4})/(\d{3,4})$'
+    match = re.match(pattern, value.upper())
     
-    def __init__(self, pattern=r'^[A-Z]{2}\d{4,6}$'):
-        self.pattern = pattern
-    
-    def __call__(self, value):
-        if not re.match(self.pattern, value):
-            raise ValidationError(
-                _('Invalid registration number format. Expected format: 2 letters followed by 4-6 digits'),
-                code='invalid'
-            )
-
-
-class PhoneValidator:
-    """Validate phone number format"""
-    
-    def __init__(self, pattern=r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'):
-        self.pattern = pattern
-    
-    def __call__(self, value):
-        if not re.match(self.pattern, value):
-            raise ValidationError(
-                _('Invalid phone number format'),
-                code='invalid'
-            )
-
-
-def validate_image_size(file, max_size_mb=5):
-    """Validate image file size"""
-    file_size = file.size
-    limit_bytes = max_size_mb * 1024 * 1024
-    
-    if file_size > limit_bytes:
+    if not match:
         raise ValidationError(
-            _(f'File size must not exceed {max_size_mb}MB. Current size: {file_size / (1024 * 1024):.2f}MB'),
-            code='file_too_large'
+            _('Invalid format. Use T/XXXX/YYYY/NNNN (e.g., T/DEG/2025/001)'),
+            code='invalid_format'
+        )
+    
+    level, year_str, number = match.groups()
+    year = int(year_str)
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+    
+    # Allow registration year range: last 5 years to current year
+    min_year = current_year - 5
+    max_year = current_year + 1 if current_month >= 10 else current_year
+    
+    if year < min_year or year > max_year:
+        raise ValidationError(
+            _(f'Year must be between {min_year} and {max_year}'),
+            code='invalid_year'
         )
 
 
-def validate_image_format(file, allowed_formats=None):
-    """Validate image file format"""
+def validate_full_name(value):
+    """
+    Validate full name format: First Last Surname
+    Must have at least 2 parts, only letters, spaces, and hyphens
+    """
+    # Remove extra spaces
+    clean_name = ' '.join(value.split())
+    
+    # Check if has at least 2 parts
+    parts = clean_name.split()
+    if len(parts) < 2:
+        raise ValidationError(
+            _('Full name must have at least first name and last name'),
+            code='invalid_name_format'
+        )
+    
+    if len(parts) > 3:
+        raise ValidationError(
+            _('Full name should have at most 3 parts (first, last, surname)'),
+            code='too_many_name_parts'
+        )
+    
+    # Check for valid characters
+    if not re.match(r"^[a-zA-Z\s\-']+$", value):
+        raise ValidationError(
+            _('Name can only contain letters, spaces, hyphens, and apostrophes'),
+            code='invalid_characters'
+        )
+
+
+def validate_strong_password(value):
+    """
+    Validate password strength:
+    - At least 8 characters
+    - At least one uppercase letter
+    - At least one lowercase letter
+    - At least one digit
+    - At least one special character
+    """
+    if len(value) < 8:
+        raise ValidationError(
+            _('Password must be at least 8 characters long'),
+            code='password_too_short'
+        )
+    
+    if not re.search(r'[A-Z]', value):
+        raise ValidationError(
+            _('Password must contain at least one uppercase letter'),
+            code='no_uppercase'
+        )
+    
+    if not re.search(r'[a-z]', value):
+        raise ValidationError(
+            _('Password must contain at least one lowercase letter'),
+            code='no_lowercase'
+        )
+    
+    if not re.search(r'\d', value):
+        raise ValidationError(
+            _('Password must contain at least one digit'),
+            code='no_digit'
+        )
+    
+    if not re.search(r'[!@#$%^&*()_+\-=\[\]{};:,.<>?]', value):
+        raise ValidationError(
+            _('Password must contain at least one special character (!@#$%^&*...)'),
+            code='no_special_char'
+        )
     if allowed_formats is None:
         allowed_formats = ['JPEG', 'JPG', 'PNG', 'GIF', 'WEBP']
     
