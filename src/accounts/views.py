@@ -96,6 +96,11 @@ class LoginView(View):
         
         if user is not None:
             login(request, user)
+            
+            # Redirect unapproved users to pending approval page
+            if not user.is_approved:
+                return redirect('accounts:pending_approval')
+            
             return redirect('accounts:member_dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
@@ -108,6 +113,28 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('home')
+
+
+@login_required(login_url='login')
+def pending_approval_view(request):
+    """View for users pending approval"""
+    user = request.user
+    
+    # If user is approved, redirect to dashboard
+    if user.is_approved:
+        return redirect('accounts:member_dashboard')
+    
+    # If user is inactive, logout
+    if not user.is_active:
+        logout(request)
+        messages.error(request, 'Your account has been rejected.')
+        return redirect('accounts:login')
+    
+    context = {
+        'user': user,
+        'department': user.department,
+    }
+    return render(request, 'accounts/pending_approval.html', context)
 
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
@@ -220,11 +247,8 @@ def approve_member(request, pk):
     
     if not member.is_approved:
         member.is_approved = True
-        member.approved_at = timezone.now()
-        member.save()
-        
-        # Send approval email
-        _send_approval_email(member)
+        # Save with update_fields to trigger signal
+        member.save(update_fields=['is_approved'])
         messages.success(request, f'{member.full_name} has been approved!')
     else:
         messages.info(request, f'{member.full_name} is already approved.')

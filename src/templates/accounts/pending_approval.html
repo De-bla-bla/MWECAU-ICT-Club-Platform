@@ -5,23 +5,76 @@
 {% block content %}
 <div class="container py-5">
     <div class="row">
-        <div class="col-lg-6 mx-auto">
-            <div class="card border-warning">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-hourglass-half fa-4x text-warning mb-4"></i>
-                    <h2 class="card-title">Account Pending Approval</h2>
-                    <p class="card-text text-muted mb-4">
-                        Thank you for registering with the ICT Club! Your account is currently pending approval from our club leadership.
+        <div class="col-lg-7 mx-auto">
+            <div class="card border-warning shadow">
+                <div class="card-body py-5">
+                    <div class="text-center mb-5">
+                        <i class="fas fa-hourglass-half fa-5x text-warning mb-4"></i>
+                        <h2 class="card-title">Account Pending Approval</h2>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Welcome to the ICT Club!</strong> Your registration has been received and is under review.
+                    </div>
+                    
+                    <p class="card-text mb-4">
+                        Thank you for registering with the Mwenge Catholic University ICT Club! Your account is currently pending approval from our club leadership and department coordinators.
                     </p>
-                    <p class="card-text">
-                        You will receive an email notification once your account has been reviewed and approved. This typically happens within 24-48 hours.
-                    </p>
-                    <hr>
-                    <p class="card-text small text-muted">
-                        <strong>Registration Number:</strong> {{ user.reg_number }}<br>
-                        <strong>Registered on:</strong> {{ user.registered_at|date:"M d, Y H:i" }}
-                    </p>
-                    <a href="{% url 'core:home' %}" class="btn btn-primary mt-4">Back to Home</a>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-clock me-2"></i>What Happens Next?</h5>
+                            <ol class="mb-0">
+                                <li>Your registration will be reviewed by the <strong>{{ department.name }}</strong> department leadership</li>
+                                <li>You will receive an email notification once approved</li>
+                                <li>Upon approval, you'll gain full access to member features and the dashboard</li>
+                                <li>Approval typically takes <strong>24-48 hours</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-user me-2"></i>Your Registration Details</h5>
+                            <dl class="row mb-0">
+                                <dt class="col-sm-4">Full Name:</dt>
+                                <dd class="col-sm-8">{{ user.full_name }}</dd>
+                                
+                                <dt class="col-sm-4">Registration Number:</dt>
+                                <dd class="col-sm-8"><strong>{{ user.reg_number }}</strong></dd>
+                                
+                                <dt class="col-sm-4">Email:</dt>
+                                <dd class="col-sm-8">{{ user.email }}</dd>
+                                
+                                <dt class="col-sm-4">Department:</dt>
+                                <dd class="col-sm-8">{{ department.name }}</dd>
+                                
+                                <dt class="col-sm-4">Registered:</dt>
+                                <dd class="col-sm-8">{{ user.registered_at|date:"M d, Y \a\t H:i" }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-envelope me-2"></i>
+                        <strong>Check Your Email:</strong> Please check your email ({{ user.email }}) for approval notifications. Check your spam/junk folder if you don't see emails.
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="location.reload()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh to Check Status
+                        </button>
+                        <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            Need help? Contact the {{ department.name }} department leader or email us at mwecauictclub@gmail.com
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
