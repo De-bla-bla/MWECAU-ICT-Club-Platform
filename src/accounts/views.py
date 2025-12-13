@@ -177,7 +177,7 @@ def upload_picture(request):
             user.picture_uploaded_at = timezone.now()
             user.save()
             messages.success(request, 'Profile picture uploaded successfully!')
-            return redirect('member_dashboard')
+            return redirect('accounts:member_dashboard')
     else:
         form = PictureUploadForm(instance=user)
     
@@ -201,7 +201,7 @@ def member_dashboard(request):
     
     # Check if picture is overdue
     if user.is_picture_overdue():
-        return redirect('upload_picture')
+        return redirect('accounts:upload_picture')
     
     # Calculate readable time remaining
     time_delta = user.time_until_picture_deadline()
@@ -230,7 +230,7 @@ def department_members(request):
     
     if not user.is_department_leader and not user.is_staff:
         messages.error(request, 'You do not have permission to view this page.')
-        return redirect('member_dashboard')
+        return redirect('accounts:member_dashboard')
     
     if user.is_department_leader:
         members = user.led_department.members.all().order_by('-registered_at')
@@ -254,7 +254,7 @@ def approve_member(request, pk):
     # Check permissions
     if not (user.is_staff or (user.is_department_leader and member.department == user.led_department)):
         messages.error(request, 'You do not have permission to approve this member.')
-        return redirect('department_members')
+        return redirect('accounts:department_members')
     
     if not member.is_approved:
         member.is_approved = True
@@ -264,7 +264,7 @@ def approve_member(request, pk):
     else:
         messages.info(request, f'{member.full_name} is already approved.')
     
-    return redirect('department_members')
+    return redirect('accounts:department_members')
 
 
 @login_required(login_url='accounts:login')
@@ -277,7 +277,7 @@ def reject_member(request, pk):
     # Check permissions
     if not (user.is_staff or (user.is_department_leader and member.department == user.led_department)):
         messages.error(request, 'You do not have permission to reject this member.')
-        return redirect('department_members')
+        return redirect('accounts:department_members')
     
     member.is_active = False
     member.save()
@@ -286,7 +286,7 @@ def reject_member(request, pk):
     _send_rejection_email(member)
     messages.success(request, f'{member.full_name} has been rejected.')
     
-    return redirect('department_members')
+    return redirect('accounts:department_members')
 
 
 def _send_approval_email(user):
