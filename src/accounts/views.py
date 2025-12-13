@@ -19,7 +19,7 @@ class RegisterView(CreateView):
     model = CustomUser
     form_class = CustomUserCreationForm
     template_name = 'accounts/register.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('accounts:login')
     
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -120,8 +120,8 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = CustomUserChangeForm
     template_name = 'accounts/profile_edit.html'
-    success_url = reverse_lazy('profile_detail')
-    login_url = 'login'
+    success_url = reverse_lazy('accounts:profile_detail')
+    login_url = 'accounts:login'
     
     def get_object(self):
         return self.request.user
