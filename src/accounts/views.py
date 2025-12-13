@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomUserCreationForm, CustomUserChangeForm, PictureUploadForm
 from .models import CustomUser, Department
@@ -79,21 +79,26 @@ class RegisterView(CreateView):
             )
 
 
-class LoginView(CreateView):
+class LoginView(View):
     """Custom login view"""
     template_name = 'accounts/login.html'
     
+    def get(self, request):
+        """Display login form"""
+        return render(request, self.template_name)
+    
     def post(self, request):
+        """Handle login form submission"""
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
             login(request, user)
-            return redirect('member_dashboard')
+            return redirect('accounts:member_dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
-            return redirect('login')
+            return redirect('accounts:login')
 
 
 @login_required(login_url='login')
