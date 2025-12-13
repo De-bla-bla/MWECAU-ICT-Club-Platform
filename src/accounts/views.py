@@ -107,15 +107,15 @@ class LoginView(View):
             return redirect('accounts:login')
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 def logout_view(request):
     """Logout view"""
     logout(request)
     messages.success(request, 'You have been logged out.')
-    return redirect('home')
+    return redirect('core:home')
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 def pending_approval_view(request):
     """View for users pending approval"""
     user = request.user
@@ -142,7 +142,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = CustomUser
     template_name = 'accounts/profile_detail.html'
     context_object_name = 'profile_user'
-    login_url = 'login'
+    login_url = 'accounts:login'
     
     def get_object(self):
         return self.request.user
@@ -164,7 +164,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 @picture_required
 def upload_picture(request):
     """Upload profile picture"""
@@ -189,7 +189,7 @@ def upload_picture(request):
     return render(request, 'accounts/upload_picture.html', context)
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 def member_dashboard(request):
     """Member dashboard"""
     user = request.user
@@ -203,16 +203,27 @@ def member_dashboard(request):
     if user.is_picture_overdue():
         return redirect('upload_picture')
     
+    # Calculate readable time remaining
+    time_delta = user.time_until_picture_deadline()
+    if time_delta:
+        total_seconds = int(time_delta.total_seconds())
+        hours = total_seconds // 3600
+        minutes = (total_seconds % 3600) // 60
+        time_display = f"{hours}h {minutes}m" if hours > 0 else f"{minutes}m"
+    else:
+        time_display = "No deadline"
+    
     context = {
         'user': user,
         'department': user.department,
         'picture_uploaded': bool(user.picture),
         'time_until_deadline': user.time_until_picture_deadline(),
+        'time_display': time_display,
     }
     return render(request, 'accounts/member_dashboard.html', context)
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 def department_members(request):
     """View department members (for leaders)"""
     user = request.user
@@ -233,7 +244,7 @@ def department_members(request):
     return render(request, 'accounts/department_members.html', context)
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 @require_http_methods(['POST'])
 def approve_member(request, pk):
     """Approve a member (for department leaders and admins)"""
@@ -256,7 +267,7 @@ def approve_member(request, pk):
     return redirect('department_members')
 
 
-@login_required(login_url='login')
+@login_required(login_url='accounts:login')
 @require_http_methods(['POST'])
 def reject_member(request, pk):
     """Reject a member (for department leaders and admins)"""
