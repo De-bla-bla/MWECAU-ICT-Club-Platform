@@ -143,31 +143,35 @@ class CustomUserAdmin(BaseUserAdmin):
     
     def send_picture_reminder(self, request, queryset):
         """Send picture upload reminder to members without picture"""
-        from django.core.mail import send_mail
-        from django.template.loader import render_to_string
+        from accounts.email_service import EmailService
+        import logging
+        
+        logger = logging.getLogger(__name__)
         
         members_without_picture = queryset.filter(picture__isnull=True, picture='')
         count = 0
+        failed = 0
+        
         for member in members_without_picture:
             if not member.is_picture_overdue():
                 continue
             
-            context = {'member': member}
-            email_html = render_to_string('emails/picture_reminder.html', context)
             try:
-                send_mail(
-                    subject='Picture Upload Reminder - ICT Club',
-                    message='Please upload your profile picture.',
-                    from_email='mwecauictclub@gmail.com',
-                    recipient_list=[member.email],
-                    html_message=email_html,
-                    fail_silently=False,
-                )
-                count += 1
-            except Exception:
-                pass
+                success, error = EmailService.send_picture_reminder_email(member)
+                if success:
+                    count += 1
+                else:
+                    logger.warning(f"Failed to send picture reminder to {member.email}: {error}")
+                    failed += 1
+            except Exception as e:
+                logger.error(f"Exception sending picture reminder: {str(e)}", exc_info=True)
+                failed += 1
         
-        self.message_user(request, f'Picture reminder sent to {count} members.')
+        message = f'Picture reminder sent to {count} members.'
+        if failed > 0:
+            message += f' ({failed} failed)'
+        
+        self.message_user(request, message)
     send_picture_reminder.short_description = 'Send picture upload reminder'
 
 
