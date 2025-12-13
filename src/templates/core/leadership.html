@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+
+{% block title %}Leadership - MWECAU ICT Club{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-5">
+        <div class="col-lg-8 offset-lg-2 text-center">
+            <h1 class="display-4 fw-bold mb-3">Leadership Structure</h1>
+            <p class="lead text-muted">Meet the talented individuals driving the MWECAU ICT Club forward</p>
+        </div>
+    </div>
+
+    <!-- Leadership Hierarchy -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-5"><i class="fas fa-crown me-2"></i>Club Leadership</h2>
+            
+            <!-- Top Level: Chairperson -->
+            <div class="row mb-5">
+                <div class="col-md-6 offset-md-3 text-center">
+                    <div class="card border-0 shadow-lg h-100 bg-light">
+                        <div class="card-body p-5">
+                            <div style="font-size: 3rem; color: #ffc107; margin-bottom: 15px;">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h3 class="card-title fw-bold">Chairperson</h3>
+                            <p class="text-muted mb-0">Overall leadership and strategic direction</p>
+                            <hr class="my-3">
+                            <div class="small text-secondary">
+                                <p class="mb-2"><strong>Key Responsibilities:</strong></p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check me-2"></i>Strategic planning and vision</li>
+                                    <li><i class="fas fa-check me-2"></i>External relations and partnerships</li>
+                                    <li><i class="fas fa-check me-2"></i>Leadership team coordination</li>
+                                    <li><i class="fas fa-check me-2"></i>Major decision making</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Level: Vice Chairperson -->
+            <div class="row mb-5">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4 text-center">
+                            <div style="font-size: 2.5rem; color: #0d6efd; margin-bottom: 12px;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h4 class="card-title">Vice Chairperson</h4>
+                            <p class="text-muted small">Deputizes the Chairperson</p>
+                            <small class="text-secondary">
+                                <i class="fas fa-arrow-right me-2"></i>Reports to: Chairperson
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Level: Core Leadership Team -->
+            <div class="row mb-5 g-4">
+                <!-- Secretary -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-info text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-file-alt me-2"></i>Secretary
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Records, communication & administration</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Responsibilities:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>Meeting minutes</li>
+                                <li><i class="fas fa-check me-2"></i>Communications</li>
+                                <li><i class="fas fa-check me-2"></i>Records management</li>
+                                <li><i class="fas fa-check me-2"></i>Correspondence</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assistant Secretary -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-secondary text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-clipboard me-2"></i>Assistant Secretary
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Supports secretarial duties</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Responsibilities:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>Documentation</li>
+                                <li><i class="fas fa-check me-2"></i>Administrative support</li>
+                                <li><i class="fas fa-check me-2"></i>Event coordination</li>
+                                <li><i class="fas fa-check me-2"></i>Data management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Manager -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-success text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-project-diagram me-2"></i>Product Manager
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Manages projects & initiatives</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Responsibilities:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>Project planning</li>
+                                <li><i class="fas fa-check me-2"></i>Technical oversight</li>
+                                <li><i class="fas fa-check me-2"></i>Timeline management</li>
+                                <li><i class="fas fa-check me-2"></i>Quality assurance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fourth Level: Assistant PM -->
+            <div class="row mb-5">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4 text-center">
+                            <div style="font-size: 2.5rem; color: #20c997; margin-bottom: 12px;">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h4 class="card-title">Assistant Product Manager</h4>
+                            <p class="text-muted small">Supports project management</p>
+                            <small class="text-secondary">
+                                <i class="fas fa-arrow-right me-2"></i>Reports to: Product Manager
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Division Leaders -->
+            <div class="row mt-5 mb-5">
+                <div class="col-12">
+                    <h3 class="text-center mb-5">
+                        <i class="fas fa-users me-2"></i>Division Leaders
+                    </h3>
+                </div>
+
+                <!-- AI & ML Division Leader -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-primary text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-brain me-2"></i>AI & ML Lead
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">Leads AI/ML division initiatives and projects</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Focus Areas:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>VEX Robotics</li>
+                                <li><i class="fas fa-check me-2"></i>Arduino Projects</li>
+                                <li><i class="fas fa-check me-2"></i>ML Models</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Networking Division Leader -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-success text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-network-wired me-2"></i>Networking Lead
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">Leads networking division activities</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Focus Areas:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>Cisco Networking</li>
+                                <li><i class="fas fa-check me-2"></i>Network Simulation</li>
+                                <li><i class="fas fa-check me-2"></i>Cybersecurity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Web Dev Division Leader -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-info text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-code me-2"></i>Web Dev Lead
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">Leads web development division</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Focus Areas:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>Full Stack Dev</li>
+                                <li><i class="fas fa-check me-2"></i>Mobile Apps</li>
+                                <li><i class="fas fa-check me-2"></i>DevOps/CI-CD</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design Division Leader -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-warning text-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-palette me-2"></i>Design Lead
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">Leads design & multimedia division</p>
+                            <hr class="my-3">
+                            <h6 class="fw-bold">Focus Areas:</h6>
+                            <ul class="small list-unstyled">
+                                <li><i class="fas fa-check me-2"></i>UI/UX Design</li>
+                                <li><i class="fas fa-check me-2"></i>Graphic Design</li>
+                                <li><i class="fas fa-check me-2"></i>Video Production</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Organizational Chart -->
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="bg-light rounded-3 p-5">
+                <h3 class="text-center mb-4">Organizational Hierarchy</h3>
+                <div class="text-center" style="font-family: monospace; overflow-x: auto;">
+                    <div class="mb-3">
+                        <span style="background: #ffc107; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                            <strong>Chairperson</strong>
+                        </span>
+                    </div>
+                    <div style="font-size: 1.5rem; margin: 10px 0;">↓</div>
+                    <div class="row g-3 justify-content-center mb-3">
+                        <div class="col-auto">
+                            <span style="background: #0d6efd; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                                <strong>Vice Chairperson</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; margin: 10px 0;">↓</div>
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-auto">
+                            <span style="background: #17a2b8; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                                <strong>Secretary</strong>
+                            </span>
+                        </div>
+                        <div class="col-auto">
+                            <span style="background: #28a745; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                                <strong>Product Manager</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.5rem; margin: 10px 0;">↓</div>
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-auto">
+                            <span style="background: #6c757d; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+                                <strong>Assistants & Division Leaders</strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Get Involved -->
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="bg-light rounded-3 p-5">
+                <h3 class="mb-4"><i class="fas fa-hands-helping me-2"></i>How to Get Involved</h3>
+                <p class="text-muted mb-4">
+                    We're always looking for passionate members to join our leadership team. Whether you're interested in leading a division, supporting the core leadership, or contributing to projects, there are opportunities for everyone.
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-arrow-right me-2 text-primary"></i>Attend Club Meetings</strong></p>
+                        <p class="text-muted small">Connect with the team and stay updated on initiatives</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-arrow-right me-2 text-primary"></i>Join a Division</strong></p>
+                        <p class="text-muted small">Work on projects in your area of interest</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-arrow-right me-2 text-primary"></i>Volunteer for Events</strong></p>
+                        <p class="text-muted small">Help organize and run club activities</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-arrow-right me-2 text-primary"></i>Express Leadership Interest</strong></p>
+                        <p class="text-muted small">Let leadership know about your aspirations</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-top">
+                    <p class="text-muted mb-3">Have questions about leadership roles? Contact us:</p>
+                    <a href="{% url 'core:contact' %}" class="btn btn-primary">
+                        <i class="fas fa-envelope me-2"></i>Send us a Message
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

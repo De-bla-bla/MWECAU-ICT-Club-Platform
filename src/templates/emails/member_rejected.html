@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .header {
+            background-color: #e74c3c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+        }
+        .alert {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Registration Status Update</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{ user.full_name }},</p>
+            
+            <div class="alert">
+                <strong>Unfortunately,</strong> your application for MWECAU ICT Club membership has been rejected.
+            </div>
+            
+            <p>We appreciate your interest in joining MWECAU ICT Club. After reviewing your application, our leadership team has decided not to approve your membership at this time.</p>
+            
+            <p><strong>Reason for Rejection:</strong></p>
+            <p>{{ reason_message }}</p>
+            
+            <p><strong>What Next?</strong></p>
+            <p>If you believe this decision was made in error or would like to reapply, please contact the club leadership directly through the official channels:</p>
+            <ul>
+                <li>Email: contact@mwecau-ict.edu</li>
+                <li>Visit the club office during office hours</li>
+                <li>Contact your department leader</li>
+            </ul>
+            
+            <p>We appreciate your understanding, and we encourage you to stay involved with the club's activities and events as much as possible.</p>
+            
+            <p>Best regards,<br>
+            <strong>MWECAU ICT Club Leadership</strong></p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 MWECAU ICT Club. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -19,6 +19,16 @@ class HomeView(TemplateView):
         context['recent_events'] = Event.objects.all()[:3]
         context['departments'] = Department.objects.all()
         context['announcements'] = Announcement.objects.filter(published=True)[:3]
+        
+        # Add member counts for each of the 6 departments (if user is authenticated)
+        if self.request.user.is_authenticated:
+            context['programming_count'] = Department.objects.filter(name__icontains='Programming').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Programming').exists() else 0
+            context['cybersecurity_count'] = Department.objects.filter(name__icontains='Cybersecurity').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Cybersecurity').exists() else 0
+            context['networking_count'] = Department.objects.filter(name__icontains='Networking').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Networking').exists() else 0
+            context['maintenance_count'] = Department.objects.filter(name__icontains='Computer Maintenance').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Computer Maintenance').exists() else 0
+            context['design_count'] = Department.objects.filter(name__icontains='Graphic Design').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Graphic Design').exists() else 0
+            context['ai_ml_count'] = Department.objects.filter(name__icontains='AI').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='AI').exists() else 0
+        
         return context
 
 
@@ -137,3 +147,62 @@ class ContactFormView(CreateView):
         
         messages.success(self.request, 'Thank you! We have received your message and will respond shortly.')
         return response
+
+
+class PrivacyPolicyView(TemplateView):
+    """Privacy Policy page"""
+    template_name = 'core/privacy_policy.html'
+
+
+class TermsConditionsView(TemplateView):
+    """Terms and Conditions page"""
+    template_name = 'core/terms_conditions.html'
+
+
+class LeadershipView(TemplateView):
+    """Leadership and team structure page"""
+    template_name = 'core/leadership.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # You can add leadership data here
+        # For now, this is a placeholder that can be expanded with actual team member data
+        context['leadership_positions'] = [
+            {
+                'title': 'Chairperson',
+                'icon': 'fas fa-crown',
+                'color': 'warning',
+                'description': 'Overall leadership and strategic direction of the club'
+            },
+            {
+                'title': 'Vice Chairperson',
+                'icon': 'fas fa-user-tie',
+                'color': 'primary',
+                'description': 'Assists the Chairperson and deputizes when needed'
+            },
+            {
+                'title': 'Secretary',
+                'icon': 'fas fa-file-alt',
+                'color': 'info',
+                'description': 'Records, communication, and administrative tasks'
+            },
+            {
+                'title': 'Assistant Secretary',
+                'icon': 'fas fa-clipboard',
+                'color': 'secondary',
+                'description': 'Assists the Secretary with administrative duties'
+            },
+            {
+                'title': 'Product Manager',
+                'icon': 'fas fa-project-diagram',
+                'color': 'success',
+                'description': 'Manages projects and technical initiatives'
+            },
+            {
+                'title': 'Assistant Product Manager',
+                'icon': 'fas fa-tasks',
+                'color': 'secondary',
+                'description': 'Assists with project management and coordination'
+            },
+        ]
+        return context

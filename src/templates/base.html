@@ -125,6 +125,9 @@
                         <a class="nav-link" href="{% url 'core:event_list' %}">Events</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:leadership' %}">Leadership</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:contact' %}">Contact</a>
                     </li>
                     
@@ -188,7 +191,10 @@
                     <ul class="list-unstyled small">
                         <li><a href="{% url 'core:home' %}" class="text-white text-decoration-none">Home</a></li>
                         <li><a href="{% url 'core:department_list' %}" class="text-white text-decoration-none">Departments</a></li>
+                        <li><a href="{% url 'core:leadership' %}" class="text-white text-decoration-none">Leadership</a></li>
                         <li><a href="{% url 'core:contact' %}" class="text-white text-decoration-none">Contact</a></li>
+                        <li><a href="{% url 'core:privacy_policy' %}" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="{% url 'core:terms_conditions' %}" class="text-white text-decoration-none">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-4">
@@ -212,7 +218,7 @@
             </div>
             <hr class="bg-light">
             <div class="text-center small">
-                <p>&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved. | <a href="#" class="text-white">Privacy Policy</a> | <a href="#" class="text-white">Terms of Service</a></p>
+                <p>&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved. | <a href="{% url 'core:privacy_policy' %}" class="text-white">Privacy Policy</a> | <a href="{% url 'core:terms_conditions' %}" class="text-white">Terms & Conditions</a></p>
             </div>
         </div>
     </footer>

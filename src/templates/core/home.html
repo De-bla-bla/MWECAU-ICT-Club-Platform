@@ -1,68 +1,280 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - ICT Club{% endblock %}
+{% block title %}Home - MWECAU ICT Club{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section text-center">
-    <div class="container">
-        <h1 class="display-4 fw-bold mb-3">Welcome to ICT Club</h1>
-        <p class="lead mb-4">Innovating Through Technology | Empowering Future Tech Leaders</p>
-        <p class="mb-4">Join Tanzania's premier technology club at Mwenge Catholic University</p>
-        {% if not user.is_authenticated %}
-            <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg me-3">
-                <i class="fas fa-user-plus me-2"></i>Join Now
-            </a>
-            <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-sign-in-alt me-2"></i>Login
-            </a>
-        {% else %}
-            <a href="{% url 'accounts:member_dashboard' %}" class="btn btn-light btn-lg">
-                <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-            </a>
-        {% endif %}
+<!-- Hero Section - Portfolio Style -->
+<section class="hero-section text-center py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <div class="container py-5">
+        <!-- Logo/Icon on left -->
+        <div class="row align-items-center mb-4">
+            <div class="col-md-3 text-md-start text-center">
+                <div style="font-size: 4rem; margin-bottom: 10px;">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <p class="small">MWECAU</p>
+            </div>
+            <div class="col-md-9 text-md-start text-center">
+                <h1 class="display-3 fw-bold mb-3">ICT Club</h1>
+                <p class="lead mb-2"><em>"Inspire • Innovate • Integrate"</em></p>
+                <p class="mb-0">Mwenge Catholic University's Premier Technology Community</p>
+            </div>
+        </div>
+        
+        <hr class="bg-light my-4">
+        
+        <p class="lead mb-4">Empowering students through cutting-edge technology, hands-on projects, and collaborative innovation</p>
+        <p class="mb-5">A vibrant community dedicated to advancing ICT knowledge, practical skills, and professional development</p>
     </div>
 </section>
 
-<div class="container">
-    <!-- Departments Section -->
+<div class="container mt-5">
+    <!-- About Section -->
     <section class="mb-5">
-        <h2 class="text-center mb-4">
-            <i class="fas fa-sitemap me-2"></i>Our Departments
-        </h2>
-        <div class="row g-4">
-            {% for department in departments %}
-            <div class="col-md-4 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-circle text-primary me-2" style="font-size: 0.5em;"></i>
-                            {{ department.name }}
-                        </h5>
-                        <p class="card-text text-muted">{{ department.description|truncatewords:20 }}</p>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="mb-4">About ICT Club</h2>
+                <p class="text-muted lead">The ICT Club at Mwenge Catholic University (MWECAU) is a vibrant student-led initiative focused on technology, innovation, and real-world application of ICT knowledge.</p>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Hands-On Learning:</strong> Build projects and gain practical experience</li>
+                    <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Six Departments:</strong> Programming, Cybersecurity, Networking, Maintenance, Design, and AI/ML</li>
+                    <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Workshops & Events:</strong> Regular training sessions and collaborative activities</li>
+                    <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Real-World Projects:</strong> Work on meaningful projects that showcase your skills</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-light rounded-3 p-5 text-center">
+                    <div style="font-size: 5rem; color: #667eea; margin-bottom: 20px;">
+                        <i class="fas fa-rocket"></i>
                     </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="{% url 'core:department_detail' department.slug %}" class="btn btn-sm btn-primary">
-                            Learn More
-                        </a>
+                    <h4>Our Mission</h4>
+                    <p class="text-muted">Empowering innovation through collaboration and hands-on learning. Shaping future tech leaders who make a difference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divisions/Departments Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5"><i class="fas fa-sitemap me-2"></i>Our Six Departments</h2>
+        <div class="row g-4">
+            <!-- Programming Department -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s;">
+                    <div class="card-header bg-primary text-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-code me-2"></i>Programming
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Software development and programming in multiple languages.</p>
+                        <h6 class="fw-bold mt-3 mb-2">Focus Areas:</h6>
+                        <ul class="small">
+                            <li>Python Development</li>
+                            <li>JavaScript & Web Dev</li>
+                            <li>PHP & Backend</li>
+                            <li>Application Development</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <small class="text-muted">Members: {% if user.is_authenticated %}{{ programming_count }}{% else %}<i class="fas fa-lock"></i> Login to view{% endif %}</small>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+
+            <!-- Cybersecurity Department -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-danger text-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-shield-alt me-2"></i>Cybersecurity
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Ethical hacking, digital forensics, and secure computing.</p>
+                        <h6 class="fw-bold mt-3 mb-2">Focus Areas:</h6>
+                        <ul class="small">
+                            <li>Ethical Hacking</li>
+                            <li>Digital Forensics</li>
+                            <li>Secure Computing</li>
+                            <li>Security Audits</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <small class="text-muted">Members: {% if user.is_authenticated %}{{ cybersecurity_count }}{% else %}<i class="fas fa-lock"></i> Login to view{% endif %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Networking Department -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-success text-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-network-wired me-2"></i>Networking
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Network design and implementation with hands-on practice.</p>
+                        <h6 class="fw-bold mt-3 mb-2">Focus Areas:</h6>
+                        <ul class="small">
+                            <li>Network Design</li>
+                            <li>Cisco Simulation</li>
+                            <li>Network Security</li>
+                            <li>Infrastructure Setup</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <small class="text-muted">Members: {% if user.is_authenticated %}{{ networking_count }}{% else %}<i class="fas fa-lock"></i> Login to view{% endif %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Computer Maintenance Department -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-warning text-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-tools me-2"></i>Computer Maintenance
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Hardware and software troubleshooting and repair.</p>
+                        <h6 class="fw-bold mt-3 mb-2">Focus Areas:</h6>
+                        <ul class="small">
+                            <li>Hardware Repair</li>
+                            <li>Software Troubleshooting</li>
+                            <li>System Maintenance</li>
+                            <li>Tech Support</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <small class="text-muted">Members: {% if user.is_authenticated %}{{ maintenance_count }}{% else %}<i class="fas fa-lock"></i> Login to view{% endif %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphic Design Department -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-info text-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-palette me-2"></i>Graphic Design
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Visual design using professional tools and creative platforms.</p>
+                        <h6 class="fw-bold mt-3 mb-2">Focus Areas:</h6>
+                        <ul class="small">
+                            <li>Adobe Tools</li>
+                            <li>Canva Design</li>
+                            <li>UI/UX Design</li>
+                            <li>Brand Design</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <small class="text-muted">Members: {% if user.is_authenticated %}{{ design_count }}{% else %}<i class="fas fa-lock"></i> Login to view{% endif %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI & Machine Learning Department -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-secondary text-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-brain me-2"></i>AI & Machine Learning
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">AI-driven automation and intelligent prototyping.</p>
+                        <h6 class="fw-bold mt-3 mb-2">Focus Areas:</h6>
+                        <ul class="small">
+                            <li>Machine Learning Models</li>
+                            <li>AI Automation</li>
+                            <li>Robot Prototyping</li>
+                            <li>Data Science</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <small class="text-muted">Members: {% if user.is_authenticated %}{{ ai_ml_count }}{% else %}<i class="fas fa-lock"></i> Login to view{% endif %}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Structure -->
+    <section class="mb-5 bg-light rounded-3 p-5">
+        <h2 class="text-center mb-5"><i class="fas fa-crown me-2"></i>Leadership Structure</h2>
+        <div class="row">
+            <!-- Chairman -->
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div style="font-size: 2rem; color: #ffc107; margin-bottom: 10px;">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h5 class="card-title">Chairperson</h5>
+                        <p class="text-muted">Overall leadership and strategic direction</p>
+                        <small class="text-secondary">+ Vice Chairperson</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secretary -->
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div style="font-size: 2rem; color: #17a2b8; margin-bottom: 10px;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h5 class="card-title">Secretary</h5>
+                        <p class="text-muted">Records, communication & administration</p>
+                        <small class="text-secondary">+ Assistant Secretary</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Manager -->
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div style="font-size: 2rem; color: #28a745; margin-bottom: 10px;">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h5 class="card-title">Product Manager</h5>
+                        <p class="text-muted">Projects & technical initiatives</p>
+                        <small class="text-secondary">+ Assistant PM</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Leaders -->
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <div style="font-size: 2rem; color: #dc3545; margin-bottom: 10px;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h5 class="card-title">Division Leaders</h5>
+                        <p class="text-muted">Lead their respective divisions</p>
+                        <small class="text-secondary">AI/ML, Networking, Web Dev, Design</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Featured Projects Section -->
     <section class="mb-5">
-        <h2 class="text-center mb-4">
-            <i class="fas fa-star me-2"></i>Featured Projects
-        </h2>
+        <h2 class="text-center mb-5"><i class="fas fa-star me-2"></i>Featured Projects</h2>
         <div class="row g-4">
             {% for project in featured_projects %}
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card h-100 border-0 shadow-sm">
                     {% if project.image %}
-                    <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                    <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
                         <i class="fas fa-code text-secondary" style="font-size: 3rem;"></i>
@@ -70,64 +282,274 @@
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ project.title }}</h5>
-                        <p class="card-text text-muted">{{ project.description|truncatewords:15 }}</p>
+                        <p class="card-text text-muted small">{{ project.description|truncatewords:20 }}</p>
                         {% if project.department %}
                         <span class="badge bg-info">{{ project.department.name }}</span>
                         {% endif %}
                     </div>
                     <div class="card-footer bg-transparent">
                         <a href="{% url 'core:project_detail' project.slug %}" class="btn btn-sm btn-primary">
-                            View Project
+                            View Details <i class="fas fa-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="col-12 text-center text-muted">
-                <p>No featured projects yet. Check back soon!</p>
+            <div class="col-12 text-center text-muted py-5">
+                <i class="fas fa-folder-open" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>Featured projects coming soon. Stay tuned!</p>
             </div>
             {% endfor %}
         </div>
     </section>
 
-    <!-- Recent Events Section -->
+    <!-- Upcoming Events Section -->
     <section class="mb-5">
-        <h2 class="text-center mb-4">
-            <i class="fas fa-calendar-alt me-2"></i>Upcoming Events
-        </h2>
+        <h2 class="text-center mb-5"><i class="fas fa-calendar-alt me-2"></i>Upcoming Events</h2>
         <div class="row g-4">
             {% for event in recent_events %}
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-header bg-danger text-white border-0">
+                        <h5 class="card-title mb-0">{{ event.title }}</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ event.title }}</h5>
-                        <p class="card-text text-muted">{{ event.description|truncatewords:20 }}</p>
-                        <div class="small text-secondary">
-                            <i class="fas fa-calendar me-2"></i>{{ event.event_date|date:"M d, Y" }}<br>
-                            <i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}
+                        <p class="card-text text-muted">{{ event.description|truncatewords:15 }}</p>
+                        <div class="small text-secondary mt-3">
+                            <p class="mb-2"><i class="fas fa-calendar me-2"></i><strong>{{ event.event_date|date:"M d, Y" }}</strong></p>
+                            <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ event.location }}</p>
                         </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="#" class="btn btn-sm btn-outline-danger">Learn More</a>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div class="col-12 text-center text-muted">
-                <p>No upcoming events. Stay tuned!</p>
+            <div class="col-12 text-center text-muted py-5">
+                <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>No upcoming events. Check back soon for exciting activities!</p>
             </div>
             {% endfor %}
         </div>
     </section>
 
-    <!-- Call to Action -->
-    <section class="bg-light rounded-3 p-5 text-center mb-5">
-        <h3 class="mb-3">Ready to Join ICT Club?</h3>
-        <p class="lead mb-4">Be part of a community of technology enthusiasts and innovators</p>
-        {% if user.is_authenticated %}
-            <p class="text-muted">You're already a member! Head to your dashboard to get started.</p>
-        {% else %}
-            <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">
-                <i class="fas fa-user-plus me-2"></i>Register Now
-            </a>
-        {% endif %}
+    <!-- Location Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5"><i class="fas fa-map-location-dot me-2"></i>Visit Us</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-4"><i class="fas fa-building me-2"></i>Mwenge Catholic University</h5>
+                        
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-2">Address</h6>
+                            <p class="mb-0">P.O. Box 1226<br>Moshi, Kilimanjaro<br>Tanzania</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-2">Contact</h6>
+                            <p class="mb-2"><i class="fas fa-phone me-2 text-primary"></i>+255 615 251 038</p>
+                            <p class="mb-0"><i class="fas fa-envelope me-2 text-primary"></i>info@mwecauictclub.ac.tz</p>
+                        </div>
+
+                        <div>
+                            <h6 class="text-muted mb-2">Follow Us</h6>
+                            <div>
+                                <a href="https://www.facebook.com/mwecauictclub" class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                                <a href="https://www.instagram.com/mwecauictclub" class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://wa.me/255615251038" class="btn btn-sm btn-outline-success">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="rounded-3 overflow-hidden" style="height: 400px;">
+                    <iframe width="100%" height="100%" frameborder="0" style="border:0;" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5019290650147!2d37.66397!3d-3.34939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18401e9c9c9c9c9d%3A0x1!2sMwenge%20Catholic%20University!5e0!3m2!1sen!2stz!4v" 
+                        allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links/CTA in Footer-like section -->
+    <section class="bg-dark text-white rounded-3 p-5 mb-5">
+        <h3 class="text-center mb-4">Quick Links</h3>
+        <div class="row text-center">
+            <div class="col-md-6 col-lg-3 mb-3">
+                <a href="#about" class="text-white text-decoration-none">
+                    <i class="fas fa-info-circle me-2"></i>About Us
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <a href="{% url 'core:project_list' %}" class="text-white text-decoration-none">
+                    <i class="fas fa-folder me-2"></i>Our Projects
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <a href="{% url 'core:contact' %}" class="text-white text-decoration-none">
+                    <i class="fas fa-envelope me-2"></i>Contact Us
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <a href="/privacy-policy/" class="text-white text-decoration-none">
+                    <i class="fas fa-shield-alt me-2"></i>Privacy Policy
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terms & Conditions -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5"><i class="fas fa-file-contract me-2"></i>Terms & Conditions</h2>
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="bg-light rounded-3 p-5">
+                    <h5 class="mb-3">Club Membership Terms</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Eligibility:</strong> Open to all MWECAU students with interest in ICT</li>
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Code of Conduct:</strong> Members must uphold academic integrity and professional ethics</li>
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>No Political Affiliation:</strong> The club remains non-political and neutral</li>
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Participation:</strong> Active participation in club activities is encouraged</li>
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Compliance:</strong> Members must follow university policies and guidelines</li>
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>IP Rights:</strong> Club projects and intellectual property belong to MWECAU</li>
+                        <li class="mb-3"><i class="fas fa-check text-success me-2"></i><strong>Discipline:</strong> Violations may result in membership suspension or removal</li>
+                    </ul>
+                    <hr>
+                    <p class="small text-muted mb-0">For complete terms and conditions, please <a href="/terms/">read our full policy</a>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Tiers Section -->
+    <section class="mb-5 bg-light rounded-3 p-5">
+        <h2 class="text-center mb-5"><i class="fas fa-users me-2"></i>Membership Tiers</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 h-100 text-center">
+                    <div class="card-body">
+                        <div style="font-size: 2.5rem; color: #ffc107; margin-bottom: 15px;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h4 class="card-title fw-bold">Honorary</h4>
+                        <p class="text-muted">Current ICT/CS Students</p>
+                        <hr>
+                        <ul class="list-unstyled small text-muted">
+                            <li><i class="fas fa-check me-2 text-success"></i>Full club access</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Project participation</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Event attendance</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Leadership opportunities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 h-100 text-center">
+                    <div class="card-body">
+                        <div style="font-size: 2.5rem; color: #17a2b8; margin-bottom: 15px;">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h4 class="card-title fw-bold">Associate</h4>
+                        <p class="text-muted">Other Students with Interest</p>
+                        <hr>
+                        <ul class="list-unstyled small text-muted">
+                            <li><i class="fas fa-check me-2 text-success"></i>Event attendance</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Workshop participation</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Project collaboration</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Networking opportunities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 h-100 text-center">
+                    <div class="card-body">
+                        <div style="font-size: 2.5rem; color: #28a745; margin-bottom: 15px;">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h4 class="card-title fw-bold">Expert</h4>
+                        <p class="text-muted">Graduated Mentors</p>
+                        <hr>
+                        <ul class="list-unstyled small text-muted">
+                            <li><i class="fas fa-check me-2 text-success"></i>Mentorship roles</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Guest speaking</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Advisory board</li>
+                            <li><i class="fas fa-check me-2 text-success"></i>Alumni network</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <p class="text-muted"><i class="fas fa-heart me-2 text-danger"></i>Everyone is welcome – We grow through collaboration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials/Success Stories -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5"><i class="fas fa-star me-2"></i>What Members Say</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text text-muted">"ICT Club helped me develop practical skills that complement my academic learning. The projects and events are incredibly valuable!"</p>
+                        <footer class="blockquote-footer">Active Member</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text text-muted">"The networking opportunities and collaboration with fellow tech enthusiasts have been transformative for my career journey."</p>
+                        <footer class="blockquote-footer">Project Lead</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text text-muted">"Being part of ICT Club opened doors to real-world projects and professional development opportunities I wouldn't have had elsewhere."</p>
+                        <footer class="blockquote-footer">Leadership Team Member</footer>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>
+
 {% endblock %}

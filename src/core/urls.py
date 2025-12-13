@@ -14,4 +14,7 @@ urlpatterns = [
     path('events/', views.EventListView.as_view(), name='event_list'),
     path('announcements/', views.AnnouncementListView.as_view(), name='announcement_list'),
     path('contact/', views.ContactFormView.as_view(), name='contact'),
+    path('privacy-policy/', views.PrivacyPolicyView.as_view(), name='privacy_policy'),
+    path('terms-conditions/', views.TermsConditionsView.as_view(), name='terms_conditions'),
+    path('leadership/', views.LeadershipView.as_view(), name='leadership'),
 ]
