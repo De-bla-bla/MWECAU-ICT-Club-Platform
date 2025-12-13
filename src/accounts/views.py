@@ -227,7 +227,7 @@ def member_dashboard(request):
 
 @login_required(login_url='accounts:login')
 def department_members(request):
-    """View department members (for leaders)"""
+    """View department members (for leaders) with filtering and pagination"""
     user = request.user
     
     if not user.is_department_leader and not user.is_staff:
@@ -239,6 +239,21 @@ def department_members(request):
     else:
         members = CustomUser.objects.all().order_by('-registered_at')
     
+    # Handle filtering before pagination
+    filter_type = request.GET.get('filter', 'all')
+    if filter_type == 'approved':
+        members = members.filter(is_approved=True, is_active=True)
+    elif filter_type == 'pending':
+        members = members.filter(is_approved=False, is_active=True)
+    elif filter_type == 'rejected':
+        members = members.filter(is_active=False)
+    
+    # Count different statuses for display (use filters, not page_obj)
+    all_members = CustomUser.objects.all().order_by('-registered_at') if user.is_staff else user.led_department.members.all().order_by('-registered_at')
+    approved_count = all_members.filter(is_approved=True, is_active=True).count()
+    pending_count = all_members.filter(is_approved=False, is_active=True).count()
+    rejected_count = all_members.filter(is_active=False).count()
+    
     # Add pagination - 50 members per page
     paginator = Paginator(members, 50)
     page_number = request.GET.get('page')
@@ -247,7 +262,10 @@ def department_members(request):
     context = {
         'page_obj': page_obj,
         'members': page_obj.object_list,
-        'pending_members': page_obj.object_list.filter(is_approved=False),
+        'filter_type': filter_type,
+        'approved_count': approved_count,
+        'pending_count': pending_count,
+        'rejected_count': rejected_count,
     }
     return render(request, 'accounts/department_members.html', context)
 
