@@ -132,7 +132,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserChangeForm(UserChangeForm):
-    """Form for updating user profile"""
+    """Form for updating user profile - excludes password field"""
     course = forms.ModelChoiceField(
         queryset=Course.objects.all(),
         required=False,
@@ -147,6 +147,7 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ('full_name', 'email', 'course', 'course_other', 'department', 'picture')
+        exclude = ('password',)  # Explicitly exclude password field
         widgets = {
             'full_name': forms.TextInput(attrs={
                 'class': 'form-control'
