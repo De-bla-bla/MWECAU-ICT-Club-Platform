@@ -4,7 +4,7 @@ This document lists sample users for testing the MWECAU ICT Club platform across
 
 ---
 
-## 📋 User Levels Overview
+## User Levels Overview
 
 The system supports the following user levels based on course/program level:
 
@@ -16,7 +16,7 @@ The system supports the following user levels based on course/program level:
 
 ---
 
-## 👥 Sample Test Users
+## Sample Test Users
 
 ### 1. **Certificate Level - Non-Staff User**
 
@@ -210,7 +210,7 @@ python manage.py create_test_user \
 
 ---
 
-## 🚀 Quick Setup - Create All Demo Users
+## Quick Setup - Create All Demo Users
 
 Run all commands to populate the database with demo users:
 
@@ -286,7 +286,7 @@ python manage.py create_test_user \
 
 ---
 
-## 🔐 User Authentication
+## User Authentication
 
 All users can login using their **Registration Number** as the username:
 
@@ -299,21 +299,21 @@ Password: StrongPass123!
 
 ---
 
-## 📊 User Status Summary
+## User Status Summary <del><i>fake data</i></del>
 
-| Level | Username | Email | Approved | Staff | Course |
-|-------|----------|-------|----------|-------|--------|
-| CERT | T/CERT/2025/001 | cert.student@mwecau.ac.tz | ❌ | ❌ | Certificate in IT |
-| DIP | T/DIP/2024/005 | dip.student@mwecau.ac.tz | ✅ | ❌ | Diploma in CS |
-| DEG | T/DEG/2025/001 | john.doe@mwecau.ac.tz | ✅ | ❌ | BS Computer Science |
-| DEG | T/DEG/2023/100 | admin@mwecau.ac.tz | ✅ | ✅ | BS Computer Science |
-| MASTER | T/MASTER/2024/001 | mary.m@mwecau.ac.tz | ✅ | ❌ | Master of Business Admin |
-| MASTER | T/MASTER/2023/050 | leader@mwecau.ac.tz | ✅ | ✅ | Master of Science + Education |
-| PHD | T/PHD/2023/001 | phd.researcher@mwecau.ac.tz | ❌ | ❌ | Doctor of Philosophy in Education |
+>>| Level | Username | Email | Approved | Staff | Course |
+>>|-------|----------|-------|----------|-------|--------|
+>>| CERT | T/CERT/2025/001 | cert.student@mwecau.ac.tz | ❌ | ❌ | Certificate in IT |
+>>| DIP | T/DIP/2024/005 | dip.student@mwecau.ac.tz | ✅ | ❌ | Diploma in CS |
+>>| DEG | T/DEG/2025/001 | john.doe@mwecau.ac.tz | ✅ | ❌ | BS Computer Science |
+>>| DEG | T/DEG/2023/100 | admin@mwecau.ac.tz | ✅ | ✅ | BS Computer Science |
+>>| MASTER | T/MASTER/2024/001 | mary.m@mwecau.ac.tz | ✅ | ❌ | Master of Business Admin |
+>>| MASTER | T/MASTER/2023/050 | leader@mwecau.ac.tz | ✅ | ✅ | Master of Science + Education |
+>>| PHD | T/PHD/2023/001 | phd.researcher@mwecau.ac.tz | ❌ | ❌ | Doctor of Philosophy in Education |
 
 ---
 
-## 🧪 Testing Workflow
+## Testing Workflow
 
 1. **Register New User** → Use CERT or PHD users (status: Pending)
 2. **Approve User** → Admin user can approve pending registrations
@@ -324,7 +324,7 @@ Password: StrongPass123!
 
 ---
 
-## 📝 Notes
+## Notes
 
 - All passwords meet strength requirements: 8+ chars, uppercase, lowercase, digit, special character
 - Registration numbers follow format: `T/[LEVEL]/[YEAR]/[NUMBER]`
