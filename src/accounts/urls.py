@@ -13,6 +13,8 @@ urlpatterns = [
     # Profile Management
     path('profile/', views.ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/edit/', views.ProfileUpdateView.as_view(), name='profile_edit'),
+    path('password-change/', views.UserPasswordChangeView.as_view(), name='password_change'),
+    path('password-change/done/', views.UserPasswordChangeDoneView.as_view(), name='password_change_done'),
     path('upload-picture/', views.upload_picture, name='upload_picture'),
     
     # Member Dashboard

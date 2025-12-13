@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView as DjangoPasswordChangeView, PasswordChangeDoneView as DjangoPasswordChangeDoneView
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
@@ -315,3 +316,16 @@ def _send_rejection_email(user):
         html_message=email_html,
         fail_silently=True,
     )
+
+
+class UserPasswordChangeView(LoginRequiredMixin, DjangoPasswordChangeView):
+    """Change password view"""
+    template_name = 'accounts/password_change.html'
+    success_url = reverse_lazy('accounts:password_change_done')
+    login_url = 'accounts:login'
+
+
+class UserPasswordChangeDoneView(LoginRequiredMixin, DjangoPasswordChangeDoneView):
+    """Password change confirmation view"""
+    template_name = 'accounts/password_change_done.html'
+    login_url = 'accounts:login'
