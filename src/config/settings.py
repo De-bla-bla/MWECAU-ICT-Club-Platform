@@ -30,9 +30,11 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.replit.dev',
-    'https://*.repl.co',
-    'https://*.replit.app',
+    'https://*.dev',
+    'https://*.co',
+    'https://*.app',
+    'https://localhost',
+    'http://localhost'
 ]
 
 

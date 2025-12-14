@@ -241,10 +241,20 @@ def department_members(request):
         messages.error(request, 'You do not have permission to view this page.')
         return redirect('accounts:member_dashboard')
     
-    if user.is_department_leader:
-        members = user.led_department.members.all().order_by('-registered_at')
-    else:
+    # Get members based on user role
+    if user.is_staff:
+        # Admins see all members
         members = CustomUser.objects.all().order_by('-registered_at')
+    elif user.is_department_leader:
+        # Department leaders see only their department members
+        try:
+            members = user.led_department.members.all().order_by('-registered_at')
+        except Department.DoesNotExist:
+            messages.error(request, 'You are not assigned as a leader to any department.')
+            return redirect('accounts:member_dashboard')
+    else:
+        # Shouldn't reach here, but fallback to empty queryset
+        members = CustomUser.objects.none()
     
     # Handle filtering before pagination
     filter_type = request.GET.get('filter', 'all')
@@ -255,8 +265,8 @@ def department_members(request):
     elif filter_type == 'rejected':
         members = members.filter(is_active=False)
     
-    # Count different statuses for display (use filters, not page_obj)
-    all_members = CustomUser.objects.all().order_by('-registered_at') if user.is_staff else user.led_department.members.all().order_by('-registered_at')
+    # Count different statuses for display
+    all_members = CustomUser.objects.all().order_by('-registered_at') if user.is_staff else members
     approved_count = all_members.filter(is_approved=True, is_active=True).count()
     pending_count = all_members.filter(is_approved=False, is_active=True).count()
     rejected_count = all_members.filter(is_active=False).count()
@@ -285,7 +295,14 @@ def approve_member(request, pk):
     user = request.user
     
     # Check permissions
-    if not (user.is_staff or (user.is_department_leader and member.department == user.led_department)):
+    has_permission = user.is_staff
+    if user.is_department_leader:
+        try:
+            has_permission = member.department == user.led_department
+        except Department.DoesNotExist:
+            has_permission = False
+    
+    if not has_permission:
         messages.error(request, 'You do not have permission to approve this member.')
         return redirect('accounts:department_members')
     
@@ -308,7 +325,14 @@ def reject_member(request, pk):
     user = request.user
     
     # Check permissions
-    if not (user.is_staff or (user.is_department_leader and member.department == user.led_department)):
+    has_permission = user.is_staff
+    if user.is_department_leader:
+        try:
+            has_permission = member.department == user.led_department
+        except Department.DoesNotExist:
+            has_permission = False
+    
+    if not has_permission:
         messages.error(request, 'You do not have permission to reject this member.')
         return redirect('accounts:department_members')
     
