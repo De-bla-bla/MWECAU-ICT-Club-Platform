@@ -3,34 +3,47 @@
 {% block title %}Events - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <h2 class="">Club Events</h2>
-    
-    <div class=" g-4">
-        {% for event in events %}
-            <div class=" ">
-                <div class=" h-100">
-                    {% if event.image %}
-                        <img src="{{ event.image.url }}" class="-img-top" alt="{{ event.title }}">
-                    {% endif %}
-                    <div class="-body">
-                        <h5 class="-title">{{ event.title }}</h5>
-                        <p class="-text ">{{ event.description|truncatewords:15 }}</p>
-                        <p class="small">
-                            <i class="fas fa-calendar me-1"></i>{{ event.event_date|date:"M d, Y H:i" }}<br>
-                            <i class="fas fa-map-marker-alt me-1"></i>{{ event.location }}
-                        </p>
-                        {% if event.department %}
-                            <span class="badge ">{{ event.department.name }}</span>
+<!-- Hero Section -->
+<section class="bg-brand-gradient py-16 md:py-24 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4">Club Events</h1>
+        <p class="text-xl text-blue-100">Join us for workshops, meetups, and collaborative learning experiences</p>
+    </div>
+</section>
+
+<div class="py-16 md:py-24 bg-brand-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if events %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for event in events %}
+                    <div class="card bg-white rounded-xl shadow-card hover:shadow-card-hover overflow-hidden border border-gray-100">
+                        {% if event.image %}
+                            <img src="{{ event.image.url }}" class="w-full h-48 object-cover" alt="{{ event.title }}">
+                        {% else %}
+                            <div class="w-full h-48 bg-soft-gradient flex items-center justify-center">
+                                <i class="fas fa-calendar-alt text-4xl text-brand-dark opacity-30"></i>
+                            </div>
                         {% endif %}
+                        <div class="p-6">
+                            <h5 class="text-xl font-bold text-brand-dark mb-3">{{ event.title }}</h5>
+                            <p class="text-gray-600 text-sm mb-4">{{ event.description|truncatewords:15 }}</p>
+                            <div class="space-y-2 text-sm text-gray-600 mb-4">
+                                <p><i class="fas fa-calendar text-brand-orange mr-2"></i><strong>{{ event.event_date|date:"M d, Y" }}</strong></p>
+                                <p><i class="fas fa-map-marker-alt text-brand-orange mr-2"></i>{{ event.location }}</p>
+                            </div>
+                            {% if event.department %}
+                                <span class="inline-block bg-brand-orange bg-opacity-20 text-brand-orange text-xs font-semibold px-3 py-1 rounded-full">{{ event.department.name }}</span>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-        {% empty %}
-            <div class="">
-                <div class=" ">No upcoming events.</div>
+        {% else %}
+            <div class="text-center py-16 bg-white rounded-lg">
+                <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No upcoming events. Check back soon for exciting activities!</p>
             </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

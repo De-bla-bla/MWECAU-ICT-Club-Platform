@@ -3,28 +3,37 @@
 {% block title %}Departments - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <h2 class=" ">Our Departments</h2>
-    
-    <div class=" g-4">
-        {% for department in departments %}
-            <div class=" ">
-                <div class=" h-100">
-                    <div class="-body">
-                        <h5 class="-title">
-                            <i class="fas fa-folder me-2"></i>{{ department.name }}
-                        </h5>
-                        <p class="-text ">{{ department.description }}</p>
-                        <p class="small ">
-                            <i class="fas fa-users me-1"></i>{{ department.members.count }} members
-                        </p>
+<div class="py-12 bg-brand-light min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-brand-dark mb-4">Our Departments</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore our specialized divisions focused on different ICT domains</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for department in departments %}
+                <div class="card bg-white rounded-xl shadow-card hover:shadow-card-hover p-6 border border-gray-100">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 bg-brand-blue bg-opacity-10 rounded-full flex items-center justify-center">
+                            <i class="fas fa-folder text-xl text-brand-blue"></i>
+                        </div>
+                        <h5 class="text-xl font-bold text-brand-dark">{{ department.name }}</h5>
                     </div>
-                    <div class="-footer ">
-                        <a href="{% url 'core:department_detail' department.slug %}" class="  ">Learn More</a>
-                    </div>
+                    <p class="text-gray-600 mb-4">{{ department.description }}</p>
+                    <p class="text-sm text-gray-500 mb-4">
+                        <i class="fas fa-users mr-2 text-brand-orange"></i>{{ department.members.count }} members
+                    </p>
+                    <a href="{% url 'core:department_detail' department.slug %}" class="inline-flex items-center text-brand-blue hover:text-brand-dark font-semibold transition">
+                        Learn More <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
                 </div>
-            </div>
-        {% endfor %}
+            {% empty %}
+                <div class="col-span-full text-center py-12 bg-white rounded-lg">
+                    <i class="fas fa-folder-open text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-600">No departments available yet.</p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

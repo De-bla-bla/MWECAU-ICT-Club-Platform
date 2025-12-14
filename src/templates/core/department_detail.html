@@ -3,53 +3,67 @@
 {% block title %}{{ department.name }} - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <div class=" ">
-        <div class="">
-            <h2>{{ department.name }}</h2>
-            <p class="lead ">{{ department.description }}</p>
-            
-            {% if department.leader %}
-                <div class=" ">
-                    <div class="-header  ">
-                        <h6 class="">Department Leader</h6>
-                    </div>
-                    <div class="-body">
-                        <p><strong>{{ department.leader.full_name }}</strong></p>
-                        <p class="small ">{{ department.leader.email }}</p>
-                    </div>
-                </div>
-            {% endif %}
+<div class="py-12 bg-brand-light min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <a href="{% url 'core:department_list' %}" class="inline-flex items-center text-brand-blue hover:text-brand-dark font-semibold transition mb-4">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Departments
+            </a>
         </div>
         
-        <div class="">
-            <div class="">
-                <div class="-body ">
-                    <h5 class="-title">Members</h5>
-                    <h2 class="">{{ members_count }}</h2>
-                    <p class="">Active members</p>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div class="lg:col-span-2">
+                <h2 class="text-4xl font-bold text-brand-dark mb-4">{{ department.name }}</h2>
+                <p class="text-xl text-gray-600 leading-relaxed mb-6">{{ department.description }}</p>
+                
+                {% if department.leader %}
+                    <div class="bg-white rounded-xl shadow-card border border-gray-100 overflow-hidden">
+                        <div class="bg-brand-gradient px-6 py-4">
+                            <h6 class="text-white font-bold">Department Leader</h6>
+                        </div>
+                        <div class="p-6">
+                            <p class="font-bold text-brand-dark text-lg">{{ department.leader.full_name }}</p>
+                            <p class="text-gray-600">{{ department.leader.email }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <div class="bg-white rounded-xl shadow-card border border-gray-100 p-6 text-center">
+                    <div class="w-16 h-16 bg-brand-orange bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-2xl text-brand-orange"></i>
+                    </div>
+                    <h5 class="text-gray-600 font-medium mb-2">Members</h5>
+                    <h2 class="text-4xl font-bold text-brand-dark mb-1">{{ members_count }}</h2>
+                    <p class="text-gray-500">Active members</p>
                 </div>
             </div>
         </div>
-    </div>
-    
-    {% if projects %}
-        <h3 class="">Featured Projects</h3>
-        <div class=" g-4 ">
-            {% for project in projects %}
-                <div class="">
-                    <div class=" h-100">
-                        <div class="-body">
-                            <h5 class="-title">{{ project.title }}</h5>
-                            <p class="-text">{{ project.description|truncatewords:20 }}</p>
+        
+        {% if projects %}
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold text-brand-dark mb-6 flex items-center">
+                    <i class="fas fa-star text-brand-orange mr-3"></i>Featured Projects
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for project in projects %}
+                        <div class="card bg-white rounded-xl shadow-card hover:shadow-card-hover p-6 border border-gray-100">
+                            <h5 class="text-xl font-bold text-brand-dark mb-3">{{ project.title }}</h5>
+                            <p class="text-gray-600 mb-4">{{ project.description|truncatewords:20 }}</p>
+                            <a href="{% url 'core:project_detail' project.slug %}" class="inline-flex items-center text-brand-blue hover:text-brand-dark font-semibold transition">
+                                View Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
                         </div>
-                        <div class="-footer ">
-                            <a href="{% url 'core:project_detail' project.slug %}" class="  ">View Project</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+            </div>
+        {% else %}
+            <div class="text-center py-12 bg-white rounded-lg">
+                <i class="fas fa-folder-open text-5xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600">No projects available for this department yet.</p>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

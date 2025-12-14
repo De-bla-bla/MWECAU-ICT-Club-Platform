@@ -40,8 +40,9 @@ staticfiles/
 # =========================
 # Environment variables
 # =========================
-.env
-.env.*
+scripts/.env
+scripts/.env.*
+scripts/.env.local
 .env.local
 .env.dev
 .env.prod

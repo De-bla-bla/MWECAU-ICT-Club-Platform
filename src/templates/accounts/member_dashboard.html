@@ -3,99 +3,94 @@
 {% block title %}Member Dashboard - ICT Club{% endblock %}
 
 {% block content %}
-<div class="  ">
-    <div class=" ">
-        <div class="">
-            <h2><i class="fas fa-tachometer-alt me-2"></i>Welcome, {{ user.full_name }}</h2>
-            <p class="">Manage your ICT Club membership</p>
-        </div>
-        <div class=" ">
-            {% if user.is_approved %}
-                <span class="badge "><i class="fas fa-check-circle me-1"></i>Account Approved</span>
-            {% else %}
-                <span class="badge  "><i class="fas fa-hourglass-half me-1"></i>Pending Approval</span>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Quick Stats -->
-    <div class=" g-4 ">
-        <div class="">
-            <div class="">
-                <div class="-body">
-                    <h6 class="-title ">Department</h6>
-                    <h4 class="">
-                        <i class="fas fa-sitemap me-2 "></i>{{ user.department.name }}
-                    </h4>
-                </div>
+<div class="py-12 bg-brand-light min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-brand-dark flex items-center">
+                    <i class="fas fa-tachometer-alt mr-3 text-brand-orange"></i>
+                    Welcome, {{ user.full_name }}
+                </h2>
+                <p class="text-gray-600 mt-2">Manage your ICT Club membership</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                {% if user.is_approved %}
+                    <span class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full font-semibold">
+                        <i class="fas fa-check-circle mr-2"></i>Account Approved
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full font-semibold">
+                        <i class="fas fa-hourglass-half mr-2"></i>Pending Approval
+                    </span>
+                {% endif %}
             </div>
         </div>
-        <div class="">
-            <div class="">
-                <div class="-body">
-                    <h6 class="-title ">Registration Number</h6>
-                    <h4 class="">
-                        <i class="fas fa-id- me-2 "></i>{{ user.reg_number }}
-                    </h4>
-                </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100">
+                <h6 class="text-sm font-medium text-gray-500 mb-2">Department</h6>
+                <h4 class="text-2xl font-bold text-brand-dark flex items-center">
+                    <i class="fas fa-sitemap mr-3 text-brand-blue"></i>{{ user.department.name }}
+                </h4>
+            </div>
+            <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100">
+                <h6 class="text-sm font-medium text-gray-500 mb-2">Registration Number</h6>
+                <h4 class="text-2xl font-bold text-brand-dark flex items-center">
+                    <i class="fas fa-id-card mr-3 text-brand-orange"></i>{{ user.reg_number }}
+                </h4>
             </div>
         </div>
-    </div>
 
-    <!-- Profile Section -->
-    <div class=" g-4 ">
-        <div class="">
-            <div class="">
-                <div class="-body ">
-                    {% if user.picture %}
-                        <img src="{{ user.picture.url }}" alt="Profile Picture" class="rounded-circle " width="120" height="120">
-                        <p class=" small"><i class="fas fa-check-circle me-1"></i>Picture Uploaded</p>
-                    {% else %}
-                        <div class="rounded-circle mx-auto    align-items-center justify-content-center" style="width: 120px; height: 120px;">
-                            <i class="fas fa-camera " style="font-size: 2rem;"></i>
-                        </div>
-                        {% if time_until_deadline %}
-                            {% if time_until_deadline.total_seconds > 0 %}
-                                <p class=" small">
-                                    <i class="fas fa-hourglass-half me-1"></i>
-                                    Upload picture in {{ time_display }}
-                                </p>
-                            {% else %}
-                                <p class=" small">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                    Picture upload overdue!
-                                </p>
-                            {% endif %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100 text-center">
+                {% if user.picture %}
+                    <img src="{{ user.picture.url }}" alt="Profile Picture" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-brand-blue">
+                    <p class="text-green-600 text-sm mb-4"><i class="fas fa-check-circle mr-1"></i>Picture Uploaded</p>
+                {% else %}
+                    <div class="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-camera text-4xl text-gray-400"></i>
+                    </div>
+                    {% if time_until_deadline %}
+                        {% if time_until_deadline.total_seconds > 0 %}
+                            <p class="text-yellow-600 text-sm mb-4">
+                                <i class="fas fa-hourglass-half mr-1"></i>
+                                Upload picture in {{ time_display }}
+                            </p>
+                        {% else %}
+                            <p class="text-red-600 text-sm mb-4">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                Picture upload overdue!
+                            </p>
                         {% endif %}
                     {% endif %}
-                    
-                    <a href="{% url 'accounts:upload_picture' %}" class="   w-100 ">
-                        <i class="fas fa-upload me-1"></i>{{ user.picture|yesno:"Update,Upload" }} Picture
-                    </a>
-                </div>
+                {% endif %}
+                
+                <a href="{% url 'accounts:upload_picture' %}" class="block w-full px-4 py-2 bg-brand-blue text-white font-semibold rounded-lg hover:opacity-90 transition">
+                    <i class="fas fa-upload mr-2"></i>{{ user.picture|yesno:"Update,Upload" }} Picture
+                </a>
             </div>
-        </div>
 
-        <div class="">
-            <div class="">
-                <div class="-header ">
-                    <h5 class=""><i class="fas fa-user-circle me-2"></i>Profile Information</h5>
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-card border border-gray-100 overflow-hidden">
+                <div class="bg-brand-gradient px-6 py-4">
+                    <h5 class="text-white font-bold flex items-center">
+                        <i class="fas fa-user-circle mr-2"></i>Profile Information
+                    </h5>
                 </div>
-                <div class="-body">
-                    <div class=" ">
-                        <div class="">
-                            <strong>Full Name</strong>
-                            <p>{{ user.full_name }}</p>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <strong class="text-gray-600 text-sm">Full Name</strong>
+                            <p class="text-brand-dark font-medium">{{ user.full_name }}</p>
                         </div>
-                        <div class="">
-                            <strong>Email</strong>
-                            <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+                        <div>
+                            <strong class="text-gray-600 text-sm">Email</strong>
+                            <p><a href="mailto:{{ user.email }}" class="text-brand-blue hover:underline">{{ user.email }}</a></p>
                         </div>
                     </div>
-                    <div class=" ">
-                        <div class="">
-                            <strong>Course</strong>
-                            <p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <strong class="text-gray-600 text-sm">Course</strong>
+                            <p class="text-brand-dark">
                                 {% if user.course %}
                                     {{ user.course.name }}
                                 {% elif user.course_other %}
@@ -105,59 +100,58 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="">
-                            <strong>Joined</strong>
-                            <p>{{ user.registered_at|date:"M d, Y" }}</p>
+                        <div>
+                            <strong class="text-gray-600 text-sm">Joined</strong>
+                            <p class="text-brand-dark">{{ user.registered_at|date:"M d, Y" }}</p>
                         </div>
                     </div>
-                    <hr>
-                    <a href="{% url 'accounts:profile_edit' %}" class=" ">
-                        <i class="fas fa-edit me-1"></i>Edit Profile
+                    <hr class="my-4">
+                    <a href="{% url 'accounts:profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-brand-orange text-white font-semibold rounded-lg hover:opacity-90 transition">
+                        <i class="fas fa-edit mr-2"></i>Edit Profile
                     </a>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Approval Status -->
-    {% if not user.is_approved %}
-    <div class="   fade show" role="">
-        <i class="fas fa-info-circle me-2"></i>
-        <strong>Account Pending Approval</strong><br>
-        Your account is currently pending approval from the club leadership. You'll receive an email once your account is approved.
-        <button type="button" class="" data-bs-dismiss=""></button>
-    </div>
-    {% endif %}
-
-    <!-- Member Resources -->
-    <div class="">
-        <div class="-header ">
-            <h5 class=""><i class="fas fa-cube me-2"></i>Department Resources</h5>
-        </div>
-        <div class="-body">
-            <p class=" ">Access resources specific to your department</p>
-            
-            <div class=" g-3">
-                <div class="">
-                    <div class=" border-light">
-                        <div class="-body">
-                            <h6><i class="fas fa-book me-2 "></i>Department Info</h6>
-                            <p class="small ">Learn more about {{ user.department.name }}</p>
-                            <a href="{% url 'core:department_detail' user.department.slug %}" class="  -primary">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
+        {% if not user.is_approved %}
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-8">
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                <div>
+                    <strong class="text-blue-800">Account Pending Approval</strong>
+                    <p class="text-blue-700 mt-1">Your account is currently pending approval from the club leadership. You'll receive an email once your account is approved.</p>
                 </div>
-                <div class="">
-                    <div class=" border-light">
-                        <div class="-body">
-                            <h6><i class="fas fa-users me-2 "></i>Department Members</h6>
-                            <p class="small ">Connect with other members</p>
-                            <button class="  -primary disabled">
-                                Coming Soon
-                            </button>
-                        </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="bg-white rounded-xl shadow-card border border-gray-100 overflow-hidden">
+            <div class="bg-brand-gradient px-6 py-4">
+                <h5 class="text-white font-bold flex items-center">
+                    <i class="fas fa-cube mr-2"></i>Department Resources
+                </h5>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-600 mb-6">Access resources specific to your department</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-brand-light rounded-lg p-6 border border-gray-100">
+                        <h6 class="font-bold text-brand-dark mb-2 flex items-center">
+                            <i class="fas fa-book mr-2 text-brand-blue"></i>Department Info
+                        </h6>
+                        <p class="text-gray-600 text-sm mb-4">Learn more about {{ user.department.name }}</p>
+                        <a href="{% url 'core:department_detail' user.department.slug %}" class="inline-flex items-center text-brand-blue hover:text-brand-dark font-semibold">
+                            View Details <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                    <div class="bg-brand-light rounded-lg p-6 border border-gray-100">
+                        <h6 class="font-bold text-brand-dark mb-2 flex items-center">
+                            <i class="fas fa-users mr-2 text-brand-orange"></i>Department Members
+                        </h6>
+                        <p class="text-gray-600 text-sm mb-4">Connect with other members</p>
+                        <span class="inline-flex items-center text-gray-400 font-semibold">
+                            Coming Soon
+                        </span>
                     </div>
                 </div>
             </div>

@@ -1,61 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Announcement - MWECAU ICT Club</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
-        . {
+        .email-container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         .header {
-            background-color: #3498db;
+            background: linear-gradient(135deg, #2F3E8F 0%, #1E88C9 100%);
             color: white;
-            padding: 20px;
-            : center;
-            border-radius: 5px 5px 0 0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
         }
         .content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 0 0 5px 5px;
-        }
-        .footer {
-            : center;
-            font-size: 12px;
-            color: #777;
-            margin-top: 20px;
+            padding: 40px 30px;
         }
         .announcement-box {
-            background-color: #ecf0f1;
-            border-left: 4px solid #3498db;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 4px;
+            background-color: #e7f3ff;
+            border-left: 4px solid #2F3E8F;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .announcement-box h2 {
+            margin: 0 0 10px 0;
+            color: #2F3E8F;
+            font-size: 20px;
+        }
+        .announcement-box p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
         }
         .button {
             display: inline-block;
-            background-color: #3498db;
+            background: linear-gradient(135deg, #F4A024 0%, #FFB84D 100%);
             color: white;
-            padding: 10px 20px;
-            : none;
+            padding: 12px 30px;
+            text-decoration: none;
             border-radius: 5px;
+            font-weight: 600;
             margin-top: 15px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        a {
+            color: #2F3E8F;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="">
+    <div class="email-container">
         <div class="header">
-            <h1>📢 Club Announcement</h1>
+            <h1>Club Announcement</h1>
         </div>
+        
         <div class="content">
             <p>Hello {{ recipient_name }},</p>
             
@@ -68,15 +97,19 @@
             
             <p>{{ announcement_content }}</p>
             
-            <a href="{{ announcement_url }}" class="button">View Full Announcement</a>
+            <p style="text-align: center;">
+                <a href="{{ announcement_url }}" class="button">View Full Announcement</a>
+            </p>
             
             <p style="margin-top: 25px;">For more information, please visit the club portal or reach out to the club leadership team.</p>
             
             <p>Best regards,<br>
             <strong>MWECAU ICT Club Leadership</strong></p>
         </div>
+        
         <div class="footer">
-            <p>&copy; 2024 MWECAU ICT Club. All rights reserved.</p>
+            <p>&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved.</p>
+            <p><a href="https://www.mwecauictclub.ac.tz/">Visit Our Website</a> | <a href="mailto:mwecauictclub@gmail.com">Contact Us</a></p>
         </div>
     </div>
 </body>

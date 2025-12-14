@@ -1,50 +1,24 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Server Error{% endblock %}
+{% block title %}Server Error - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <div class=" justify-content-center">
-        <div class=" ">
-            <div class="error-section">
-                <h1 class="display-1 fw-bold  ">500</h1>
-                <h2 class="">Server Error</h2>
-                <p class="lead ">Something went wrong on our end. Our team has been notified and is working to fix the issue.</p>
-                
-                <div class=" " role="">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    An internal server error occurred. Please try again later. If the problem persists, please contact us at <a href="mailto:mwecauictclub@gmail.com">mwecauictclub@gmail.com</a>.
-                </div>
-
-                <div class="">
-                    <p class="">Here are some helpful links:</p>
-                    <a href="{% url 'core:home' %}" class="   me-3">
-                        <i class="fas fa-home me-2"></i>Go Home
-                    </a>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'accounts:member_dashboard' %}" class="  ">
-                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                        </a>
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="  ">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
+<section class="py-32 bg-brand-light flex items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="text-8xl font-bold text-red-600 mb-4">500</div>
+        <h1 class="text-4xl font-bold text-brand-dark mb-4">Server Error</h1>
+        <p class="text-xl text-gray-600 mb-6">Something went wrong on our end. Our team has been notified and is working to fix the issue.</p>
+        <p class="text-gray-600 mb-8">Please try again later. If the problem persists, contact us at <a href="mailto:mwecauictclub@gmail.com" class="text-brand-blue hover:underline">mwecauictclub@gmail.com</a>.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'core:home' %}" class="px-8 py-3 bg-brand-gradient text-white font-bold rounded-lg hover:opacity-90 transition">
+                <i class="fas fa-home mr-2"></i>Go Home
+            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:member_dashboard' %}" class="px-8 py-3 border-2 border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white font-bold rounded-lg transition">
+                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                </a>
+            {% endif %}
         </div>
     </div>
-</div>
-
-<style>
-    .error-section {
-        padding: 60px 0;
-    }
-    
-    .display-1 {
-        font-size: 5rem;
-        margin-bottom: 1rem;
-    }
-</style>
+</section>
 {% endblock %}

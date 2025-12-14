@@ -3,97 +3,89 @@
 {% block title %}Contact Us - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <div class=" ">
-        <h1 class="">Get In Touch</h1>
-        <p class=" lead">Have questions or feedback? We'd love to hear from you!</p>
+<!-- Hero Section -->
+<section class="bg-brand-gradient py-16 md:py-24 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4">Get In Touch</h1>
+        <p class="text-xl text-blue-100">Have questions or feedback? We'd love to hear from you!</p>
     </div>
-    
-    <div class=" g-4">
-        <!-- Contact Form -->
-        <div class="">
-            <div class=" shadow-sm border-0">
-                <div class="-body ">
-                    <h5 class="-title ">Send us a Message</h5>
+</section>
+
+<div class="py-16 md:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Contact Form -->
+            <div class="md:col-span-2">
+                <div class="bg-white rounded-xl shadow-card p-8 border border-gray-100">
+                    <h5 class="text-2xl font-bold text-brand-dark mb-6">Send us a Message</h5>
                     
-                    <form method="post" class="needs-validation">
+                    <form method="post" class="space-y-6">
                         {% csrf_token %}
                         
                         {% for field in form %}
-                            <div class="">
-                                <label for="{{ field.id_for_label }}" class=" fw-500">{{ field.label }}</label>
+                            <div>
+                                <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-brand-dark mb-2">{{ field.label }}</label>
                                 {% if field.field.widget.input_type == 'textarea' %}
                                     {{ field }}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
                                 {% if field.errors %}
-                                    <div class="invalid-feedback ">
+                                    <div class="text-red-600 text-sm mt-1">
                                         <i class="fas fa-exclamation-circle me-1"></i>{{ field.errors.0 }}
                                     </div>
-                                {% endif %}
-                                {% if field.help_text %}
-                                    <small class="   ">{{ field.help_text|safe }}</small>
                                 {% endif %}
                             </div>
                         {% endfor %}
                         
-                        <button type="submit" class="   w-100 ">
+                        <button type="submit" class="w-full px-6 py-3 bg-cta-gradient text-white font-bold rounded-lg hover:opacity-90 transition">
                             <i class="fas fa-paper-plane me-2"></i>Send Message
                         </button>
                     </form>
                 </div>
             </div>
-        </div>
-        
-        <!-- Contact Information -->
-        <div class="">
-            <!-- Email  -->
-            <div class=" shadow-sm border-0 ">
-                <div class="-body">
-                    <div class=" align-items-start">
-                        <div class="flex-shrink-0">
-                            <div class=" align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #e7f3ff; border-radius: 8px;">
-                                <i class="fas fa-envelope " style="font-size: 1.5rem;"></i>
-                            </div>
+            
+            <!-- Contact Information -->
+            <div class="space-y-6">
+                <!-- Email -->
+                <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-2xl text-brand-orange">
+                            <i class="fas fa-envelope"></i>
                         </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="">Email</h6>
-                            <p class=""><a href="mailto:mwecauictclub@gmail.com" class="">mwecauictclub@gmail.com</a></p>
+                        <div>
+                            <h6 class="font-bold text-brand-dark mb-2">Email</h6>
+                            <p class="text-gray-600">
+                                <a href="mailto:mwecauictclub@gmail.com" class="hover:text-brand-orange transition">mwecauictclub@gmail.com</a>
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Phone  -->
-            <div class=" shadow-sm border-0 ">
-                <div class="-body">
-                    <div class=" align-items-start">
-                        <div class="flex-shrink-0">
-                            <div class=" align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #e7f3ff; border-radius: 8px;">
-                                <i class="fas fa-phone " style="font-size: 1.5rem;"></i>
-                            </div>
+                
+                <!-- Phone -->
+                <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-2xl text-brand-orange">
+                            <i class="fas fa-phone"></i>
                         </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="">Phone</h6>
-                            <p class=""><a href="tel:+255615251038" class="">+255 615 251 038</a></p>
+                        <div>
+                            <h6 class="font-bold text-brand-dark mb-2">Phone</h6>
+                            <p class="text-gray-600">
+                                <a href="tel:+255615251038" class="hover:text-brand-orange transition">+255 615 251 038</a>
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Location  -->
-            <div class=" shadow-sm border-0">
-                <div class="-body">
-                    <div class=" align-items-start">
-                        <div class="flex-shrink-0">
-                            <div class=" align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #e7f3ff; border-radius: 8px;">
-                                <i class="fas fa-map-marker-alt " style="font-size: 1.5rem;"></i>
-                            </div>
+                
+                <!-- Location -->
+                <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100">
+                    <div class="flex items-start space-x-4">
+                        <div class="text-2xl text-brand-orange">
+                            <i class="fas fa-map-marker-alt"></i>
                         </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="">Location</h6>
-                            <p class="">Mwenge Catholic University<br>Moshi, Tanzania</p>
+                        <div>
+                            <h6 class="font-bold text-brand-dark mb-2">Location</h6>
+                            <p class="text-gray-600">Mwenge Catholic University<br>Moshi, Kilimanjaro, Tanzania</p>
                         </div>
                     </div>
                 </div>
@@ -102,31 +94,16 @@
     </div>
 </div>
 
-<style>
-    form input[type="text"],
-    form input[type="email"],
-    form textarea {
-        border: 1px solid #dee2e6;
-        border-radius: 6px;
-        padding: 0.75rem;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-    }
-    
-    form input[type="text"]:focus,
-    form input[type="email"]:focus,
-    form textarea:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    }
-    
-    form textarea {
-        resize: vertical;
-        min-height: 120px;
-    }
-    
-    . {
-        font-weight: 500;
-    }
-</style>
+<!-- Map Section -->
+<section class="bg-brand-light py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-brand-dark mb-8 text-center">Visit Us</h2>
+        <div class="rounded-xl overflow-hidden shadow-lg h-96">
+            <iframe width="100%" height="100%" frameborder="0" style="border:0;" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5019290650147!2d37.66397!3d-3.34939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18401e9c9c9c9c9d%3A0x1!2sMwenge%20Catholic%20University!5e0!3m2!1sen!2stz!4v" 
+                allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

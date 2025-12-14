@@ -3,13 +3,20 @@
 {% block title %}Projects - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <h2 class="">Club Projects</h2>
-    
-    <div class=" ">
-        <div class="">
-            <form method="get" class="">
-                <select name="department" class="" onchange="this.form.submit()">
+<!-- Hero Section -->
+<section class="bg-brand-gradient py-16 md:py-24 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4">Club Projects</h1>
+        <p class="text-xl text-blue-100">Explore innovative projects built by our community</p>
+    </div>
+</section>
+
+<div class="py-16 md:py-24 bg-brand-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Filter -->
+        <div class="mb-12">
+            <form method="get" class="flex flex-col sm:flex-row gap-4">
+                <select name="department" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-brand-blue" onchange="this.form.submit()">
                     <option value="">All Departments</option>
                     {% for dept in departments %}
                         <option value="{{ dept.slug }}" {% if request.GET.department == dept.slug %}selected{% endif %}>
@@ -19,39 +26,47 @@
                 </select>
             </form>
         </div>
-    </div>
-    
-    <div class=" g-4">
-        {% for project in projects %}
-            <div class=" ">
-                <div class=" h-100">
-                    {% if project.image %}
-                        <img src="{{ project.image.url }}" class="-img-top" alt="{{ project.title }}">
-                    {% else %}
-                        <div class="  align-items-center justify-content-center" style="height: 200px;">
-                            <i class="fas fa-image fa-3x "></i>
+        
+        {% if projects %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for project in projects %}
+                    <div class="card bg-white rounded-xl shadow-card hover:shadow-card-hover overflow-hidden border border-gray-100">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="w-full h-48 object-cover" alt="{{ project.title }}">
+                        {% else %}
+                            <div class="w-full h-48 bg-soft-gradient flex items-center justify-center">
+                                <i class="fas fa-code text-4xl text-brand-dark opacity-30"></i>
+                            </div>
+                        {% endif %}
+                        <div class="p-6">
+                            <h5 class="text-xl font-bold text-brand-dark mb-2">{{ project.title }}</h5>
+                            <p class="text-gray-600 text-sm mb-4">{{ project.description|truncatewords:15 }}</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                {% if project.featured %}
+                                    <span class="inline-block bg-brand-orange bg-opacity-20 text-brand-orange text-xs font-semibold px-3 py-1 rounded-full">Featured</span>
+                                {% endif %}
+                                {% if project.department %}
+                                    <span class="inline-block bg-brand-blue bg-opacity-20 text-brand-blue text-xs font-semibold px-3 py-1 rounded-full">{{ project.department.name }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="flex gap-3">
+                                <a href="{% url 'core:project_detail' project.slug %}" class="flex-1 px-4 py-2 bg-brand-dark text-white text-center font-semibold rounded-lg hover:bg-brand-blue transition">View Details</a>
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" target="_blank" class="px-4 py-2 border border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white rounded-lg transition">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
-                    <div class="-body">
-                        <h5 class="-title">{{ project.title }}</h5>
-                        <p class="-text ">{{ project.description|truncatewords:15 }}</p>
-                        {% if project.featured %}
-                            <span class="badge ">Featured</span>
-                        {% endif %}
                     </div>
-                    <div class="-footer ">
-                        <a href="{% url 'core:project_detail' project.slug %}" class="  ">View Details</a>
-                        {% if project.github_url %}
-                            <a href="{{ project.github_url }}" target="_blank" class="  ">GitHub</a>
-                        {% endif %}
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-        {% empty %}
-            <div class="">
-                <div class=" ">No projects found.</div>
+        {% else %}
+            <div class="text-center py-16 bg-white rounded-lg">
+                <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No projects found. Check back soon!</p>
             </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

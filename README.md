@@ -121,11 +121,36 @@ mwecau_ict/
 │   │
 │   └── manage.py                 # Django management script
 │
-├── .env                          # Environment variables (create from .env.example)
-├── .env.example                  # Environment variables template
-├── requirements.txt              # Python dependencies
+├── docs/                         # Documentation
+│   ├── setup/                    # Setup & deployment guides
+│   │   ├── DOCKER_GUIDE.md
+│   │   ├── DOCKER_SETUP_SUMMARY.md
+│   │   ├── docker-compose.yml
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   ├── deployment/               # Deployment documentation
+│   │   └── DEPLOYMENT_READY.md
+│   ├── guides/                   # Feature guides
+│   │   ├── EMAIL_SYSTEM_GUIDE.md
+│   │   └── EMAIL_SYSTEM_COMPLETE.md
+│   ├── CHANGELOG.md
+│   ├── CODE_OF_CONDUCT.md
+│   ├── CONTRIBUTING.md
+│   ├── FEATURES_IMPLEMENTATION_AUDIT.md
+│   ├── PROJECT_STATUS.txt
+│   └── USERS.md
+│
+├── public/                       # Public assets
+│   ├── .env.example
+│   └── assets/
+│
+├── scripts/                      # Utility scripts
+│   ├── EMAIL_QUICK_REFERENCE.sh
+│   ├── tests_email.py
+│   └── .env
+│
 ├── README.md                     # This file
-└── docker-compose.yml            # Docker setup (optional)
+└── venv/                         # Virtual environment
 ```
 
 ---
@@ -157,15 +182,15 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ### Step 3: Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r docs/setup/requirements.txt
 ```
 
 ### Step 4: Configure Environment Variables
 
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
-nano .env
+cp public/.env.example scripts/.env
+# Edit scripts/.env with your configuration
+nano scripts/.env
 ```
 
 ### Step 5: Run Migrations
@@ -328,16 +353,15 @@ heroku run python src/manage.py migrate
 
 ### Option 2: Docker Deployment
 
-Create `Dockerfile`:
+For production deployment using Docker:
+- Refer to [docs/setup/DOCKER_GUIDE.md](docs/setup/DOCKER_GUIDE.md) - Comprehensive Docker setup guide
+- Refer to [docs/setup/DOCKER_SETUP_SUMMARY.md](docs/setup/DOCKER_SETUP_SUMMARY.md) - Setup checklist and verification
+- Refer to [docs/deployment/DEPLOYMENT_READY.md](docs/deployment/DEPLOYMENT_READY.md) - Deployment readiness checklist
 
-```dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY src .
-RUN python manage.py collectstatic --noinput
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+Quick start:
+```bash
+docker-compose -f docs/setup/docker-compose.yml build
+docker-compose -f docs/setup/docker-compose.yml up -d
 ```
 
 ### Option 3: Traditional VPS (Ubuntu)
@@ -352,14 +376,14 @@ git clone https://github.com/mwecauictclub/mwecau_ict.git
 cd mwecau_ict
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r docs/setup/requirements.txt
 
 # Configure Gunicorn
 pip install gunicorn
 gunicorn src.config.wsgi:application --bind 0.0.0.0:8000
 
 # Configure Nginx (reverse proxy)
-# ... (see deployment guide)
+# For detailed setup, see docs/deployment/DEPLOYMENT_READY.md
 ```
 
 ---

@@ -1,268 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ICT Club - Mwenge Catholic University{% endblock %}</title>
+    <title>{% block title %}MWECAU ICT Club - Technology Community{% endblock %}</title>
     
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-dark': '#2F3E8F',
+                        'brand-blue': '#1E88C9',
+                        'brand-orange': '#F4A024',
+                        'brand-light': '#F5F7FA',
+                        'brand-bg': '#0B0B0D',
+                    },
+                    backgroundImage: {
+                        'brand-gradient': 'linear-gradient(135deg, #2F3E8F, #1E88C9)',
+                        'cta-gradient': 'linear-gradient(135deg, #F4A024, #FFB84D)',
+                        'dark-gradient': 'linear-gradient(180deg, #0B0B0D, #1A1F36)',
+                        'soft-gradient': 'linear-gradient(180deg, #F5F7FA, #EAF1F8)',
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px rgba(47, 62, 143, 0.1)',
+                        'card-hover': '0 12px 24px rgba(47, 62, 143, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #3b82f6;
-            --accent-color: #10b981;
-            --danger-color: #ef4444;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8fafc;
+        /* Smooth transitions */
+        button, a, .card {
+            transition: all 0.3s ease;
         }
         
-        . {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        /* Hover effects */
+        .btn-hover:hover {
+            transform: translateY(-2px);
         }
         
-        . {
-            font-weight: bold;
-            font-size: 1.3rem;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px rgba(47, 62, 143, 0.2);
         }
         
-        . {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(47, 62, 143, 0.1);
         }
         
-        .:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
+        .nav-link:hover {
+            color: #1E88C9;
         }
         
-        . {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
+        /* Dark mode support */
+        .dark .navbar {
+            background: rgba(11, 11, 13, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .badge {
-            padding: 0.5rem 0.75rem;
+        .dark .nav-link {
+            color: #E5E7EB;
         }
         
-        .footer {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2rem 0;
-            margin-top: 3rem;
+        .dark .nav-link:hover {
+            color: #F4A024;
         }
         
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
+        /* Gradient backgrounds */
+        .bg-brand-gradient {
+            background: linear-gradient(135deg, #2F3E8F 0%, #1E88C9 100%);
         }
         
-        . {
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+        .bg-cta-gradient {
+            background: linear-gradient(135deg, #F4A024 0%, #FFB84D 100%);
         }
         
-        .:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        /* Alert styling */
+        .alert-success {
+            @apply bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg;
         }
         
-        . {
-            border-radius: 8px;
+        .alert-error {
+            @apply bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg;
         }
         
-        ., . {
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
-            padding: 0.75rem;
-        }
-        
-        .:focus, .:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-        }
-        
-        . {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
+        .alert-info {
+            @apply bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg;
         }
     </style>
     
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="bg-brand-light text-gray-900">
     <!-- Navigation -->
-    <nav class="  ">
-        <div class="">
-            <a class="" href="{% url 'core:home' %}">
-                <i class="fas fa-laptop-code me-2"></i>ICT Club
-            </a>
-            <button class="" type="button" data-bs-toggle="collapse" data-bs-target="#">
-                <span class=""></span>
-            </button>
-            <div class="collapse " id="">
-                <ul class=" ms-auto">
-                    <!-- Public Navigation -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:about' %}">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:event_list' %}">Events</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:faq' %}">FAQs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:leadership' %}">Team</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:contact' %}">Contact</a>
-                    </li>
+    <nav class="navbar sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="{% url 'core:home' %}" class="flex items-center space-x-2">
+                    <img src="/static/images/ict-club-logo.jpeg" alt="ICT Club Logo" class="h-12 w-12 rounded-full">
+                    <span class="text-xl font-bold text-brand-dark">ICT Club</span>
+                </a>
+                
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-btn" class="md:hidden focus:outline-none">
+                    <i class="fas fa-bars text-2xl text-brand-dark"></i>
+                </button>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="{% url 'core:home' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">Home</a>
+                    <a href="{% url 'core:about' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">About</a>
+                    <a href="{% url 'core:event_list' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">Events</a>
+                    <a href="{% url 'core:faq' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">FAQs</a>
+                    <a href="{% url 'core:leadership' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">Team</a>
+                    <a href="{% url 'core:contact' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">Contact</a>
                     
                     {% if user.is_authenticated %}
-                        <!-- Separator for authenticated users -->
-                        <li class="nav-item">
-                            <span class=" ms-2 me-2" style="color: rgba(255, 255, 255, 0.5);">|</span>
-                        </li>
-                        
-                        <!-- Member Navigation -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:department_list' %}">Departments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:project_list' %}">Projects</a>
-                        </li>
+                        <div class="border-l border-gray-200 ml-1 pl-1"></div>
+                        <a href="{% url 'core:department_list' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">Departments</a>
+                        <a href="{% url 'core:project_list' %}" class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg">Projects</a>
                         
                         <!-- User Dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle me-1"></i>{{ user.first_name }} {{ user.last_name }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{% url 'accounts:member_dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                                <li><a class="dropdown-item" href="{% url 'accounts:profile_detail' %}"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <div class="relative group">
+                            <button class="nav-link px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-blue rounded-lg flex items-center space-x-1">
+                                <i class="fas fa-user-circle"></i>
+                                <span>{{ user.first_name }}</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="hidden group-hover:block absolute right-0 mt-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
+                                <a href="{% url 'accounts:member_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-light rounded-t-lg">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                </a>
+                                <a href="{% url 'accounts:profile_detail' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-light">
+                                    <i class="fas fa-user me-2"></i>My Profile
+                                </a>
                                 {% if user.is_department_leader or user.is_staff %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="{% url 'accounts:department_members' %}"><i class="fas fa-users me-2"></i>Members</a></li>
+                                    <hr class="my-1">
+                                    <a href="{% url 'accounts:department_members' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-light">
+                                        <i class="fas fa-users me-2"></i>Members
+                                    </a>
                                 {% endif %}
                                 {% if user.is_staff %}
-                                    <li><a class="dropdown-item" href="/admin/"><i class="fas fa-cog me-2"></i>Admin Panel</a></li>
+                                    <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-brand-light">
+                                        <i class="fas fa-cog me-2"></i>Admin
+                                    </a>
                                 {% endif %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                            </ul>
-                        </li>
+                                <hr class="my-1">
+                                <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a>
+                            </div>
+                        </div>
                     {% endif %}
-                </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-4 space-y-2">
+                <a href="{% url 'core:home' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Home</a>
+                <a href="{% url 'core:about' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">About</a>
+                <a href="{% url 'core:event_list' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Events</a>
+                <a href="{% url 'core:faq' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">FAQs</a>
+                <a href="{% url 'core:leadership' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Team</a>
+                <a href="{% url 'core:contact' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Contact</a>
+                {% if user.is_authenticated %}
+                    <hr class="my-2">
+                    <a href="{% url 'core:department_list' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Departments</a>
+                    <a href="{% url 'core:project_list' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Projects</a>
+                    <a href="{% url 'accounts:member_dashboard' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">Dashboard</a>
+                    <a href="{% url 'accounts:profile_detail' %}" class="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-brand-light rounded-lg">My Profile</a>
+                    <a href="{% url 'accounts:logout' %}" class="block px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg">Logout</a>
+                {% endif %}
             </div>
         </div>
     </nav>
-
-    <!-- Messages -->
+    
+    <!-- Messages/Alerts -->
     {% if messages %}
-        <div class=" ">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-2">
             {% for message in messages %}
-                <div class=" -{{ message.tags }}  fade show" role="">
+                <div class="alert-{{ message.tags|default:'info' }} alert-dismissible" role="alert">
+                    <button type="button" class="float-right text-lg leading-none font-semibold opacity-50 hover:opacity-75" onclick="this.parentElement.style.display='none';">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     {{ message }}
-                    <button type="button" class="" data-bs-dismiss=""></button>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
-
+    
     <!-- Main Content -->
     {% block content %}{% endblock %}
-
+    
     <!-- Footer -->
-    <footer class="footer ">
-        <div class="">
-            <div class="">
-                <!-- Column 1: About -->
-                <div class=" ">
-                    <h5><i class="fas fa-info-circle me-2"></i>About ICT Club</h5>
-                    <p class="small">The ICT Club at Mwenge Catholic University empowers students with cutting-edge technology skills and fosters innovation through collaboration.</p>
+    <footer class="bg-brand-dark text-white mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <!-- About -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-info-circle text-brand-orange"></i>
+                        <span>About ICT Club</span>
+                    </h5>
+                    <p class="text-gray-300 text-sm leading-relaxed">The ICT Club at Mwenge Catholic University empowers students with cutting-edge technology skills and fosters innovation through collaboration.</p>
                 </div>
-
-                <!-- Column 2: Quick Links & Member Links -->
-                <div class=" ">
-                    <h5><i class="fas fa-link me-2"></i>Navigation</h5>
-                    <ul class="list-unstyled small">
-                        <li><a href="{% url 'core:home' %}" class=" "><i class="fas fa-home me-2"></i>Home</a></li>
-                        <li><a href="{% url 'core:about' %}" class=" "><i class="fas fa-book me-2"></i>About</a></li>
-                        <li><a href="{% url 'core:event_list' %}" class=" "><i class="fas fa-calendar me-2"></i>Events</a></li>
+                
+                <!-- Navigation -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-link text-brand-orange"></i>
+                        <span>Navigation</span>
+                    </h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="{% url 'core:home' %}" class="text-gray-300 hover:text-brand-orange transition">Home</a></li>
+                        <li><a href="{% url 'core:about' %}" class="text-gray-300 hover:text-brand-orange transition">About</a></li>
+                        <li><a href="{% url 'core:event_list' %}" class="text-gray-300 hover:text-brand-orange transition">Events</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'accounts:member_dashboard' %}" class=" "><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
-                            <li><a href="{% url 'accounts:profile_detail' %}" class=" "><i class="fas fa-user me-2"></i>My Profile</a></li>
+                            <li><a href="{% url 'accounts:member_dashboard' %}" class="text-gray-300 hover:text-brand-orange transition">Dashboard</a></li>
                         {% else %}
-                            <li><a href="{% url 'accounts:login' %}" class=" "><i class="fas fa-sign-in-alt me-2"></i>Login</a></li>
-                            <li><a href="{% url 'accounts:register' %}" class=" "><i class="fas fa-user-plus me-2"></i>Join Club</a></li>
+                            <li><a href="{% url 'accounts:login' %}" class="text-gray-300 hover:text-brand-orange transition">Login</a></li>
                         {% endif %}
                     </ul>
                 </div>
-
-                <!-- Column 3: Contact & Social -->
-                <div class=" ">
-                    <h5><i class="fas fa-phone me-2"></i>Contact</h5>
-                    <p class="small ">
-                        <i class="fas fa-envelope me-2"></i><a href="mailto:mwecauictclub@gmail.com" class=" ">mwecauictclub@gmail.com</a><br>
-                        <i class="fas fa-phone me-2"></i><a href="tel:+255615251038" class=" ">+255 615 251 038</a>
+                
+                <!-- Contact -->
+                <div>
+                    <h5 class="text-lg font-bold mb-4 flex items-center space-x-2">
+                        <i class="fas fa-phone text-brand-orange"></i>
+                        <span>Contact</span>
+                    </h5>
+                    <p class="text-gray-300 text-sm mb-4">
+                        <i class="fas fa-envelope me-2"></i><a href="mailto:mwecauictclub@gmail.com" class="hover:text-brand-orange transition">mwecauictclub@gmail.com</a><br>
+                        <i class="fas fa-phone me-2"></i><a href="tel:+255615251038" class="hover:text-brand-orange transition">+255 615 251 038</a>
                     </p>
-                    <div class="">
-                        <a href="https://github.com/mwecauictclub" class=" me-3" target="_blank" title="GitHub">
-                            <i class="fab fa-github fa-lg"></i>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/mwecauictclub" class="text-gray-300 hover:text-brand-orange text-xl transition" target="_blank">
+                            <i class="fab fa-github"></i>
                         </a>
-                        <a href="https://facebook.com/mwecauictclub" class=" me-3" target="_blank" title="Facebook">
-                            <i class="fab fa-facebook fa-lg"></i>
+                        <a href="https://facebook.com/mwecauictclub" class="text-gray-300 hover:text-brand-orange text-xl transition" target="_blank">
+                            <i class="fab fa-facebook"></i>
                         </a>
-                        <a href="https://twitter.com/mwecauictclub" class="" target="_blank" title="Twitter">
-                            <i class="fab fa-twitter fa-lg"></i>
+                        <a href="https://twitter.com/mwecauictclub" class="text-gray-300 hover:text-brand-orange text-xl transition" target="_blank">
+                            <i class="fab fa-twitter"></i>
                         </a>
                     </div>
                 </div>
             </div>
-
-            <hr class="">
             
-            <!-- Footer Bottom: Legal & Copyright -->
-            <div class="">
-                <div class=" ">
-                    <p class="small ">&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved.</p>
-                    <p class="small">
-                        <a href="{% url 'core:privacy_policy' %}" class="  me-3">Privacy Policy</a>
-                        <span class="">|</span>
-                        <a href="{% url 'core:terms_conditions' %}" class="  ms-3">Terms & Conditions</a>
-                    </p>
+            <hr class="border-gray-700 mb-8">
+            
+            <!-- Footer Bottom -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left items-center">
+                <p class="text-gray-300 text-sm">&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved.</p>
+                <div class="text-gray-300 text-sm space-x-4 flex justify-center md:justify-center">
+                    <a href="{% url 'core:privacy_policy' %}" class="hover:text-brand-orange transition">Privacy Policy</a>
+                    <span class="text-gray-500">|</span>
+                    <a href="{% url 'core:terms_conditions' %}" class="hover:text-brand-orange transition">Terms & Conditions</a>
                 </div>
+                {% if not user.is_authenticated %}
+                    <div class="flex space-x-3 justify-center md:justify-end">
+                        <a href="{% url 'accounts:login' %}" class="px-4 py-2 text-sm font-medium text-white bg-brand-dark hover:bg-brand-blue rounded-lg btn-hover">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a href="{% url 'accounts:register' %}" class="px-4 py-2 text-sm font-medium text-white bg-cta-gradient hover:opacity-90 rounded-lg btn-hover">
+                            <i class="fas fa-user-plus me-1"></i>Join
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Auto-hide messages after 3 seconds -->
+    <!-- Mobile Menu Toggle Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.');
-            alerts.forEach( => {
-                setTimeout(() => {
-                    const bsAlert = new bootstrap.();
-                    bsAlert.close();
-                }, 3000);  // 3 seconds
-            });
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Auto-close alerts
+        document.querySelectorAll('.alert-dismissible').forEach(alert => {
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
         });
     </script>
     

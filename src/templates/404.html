@@ -1,50 +1,24 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Page Not Found{% endblock %}
+{% block title %}Page Not Found - ICT Club{% endblock %}
 
 {% block content %}
-<div class=" ">
-    <div class=" justify-content-center">
-        <div class=" ">
-            <div class="error-section">
-                <h1 class="display-1 fw-bold  ">404</h1>
-                <h2 class="">Page Not Found</h2>
-                <p class="lead ">Sorry, the page you're looking for doesn't exist or has been moved.</p>
-                
-                <div class=" " role="">
-                    <i class="fas fa-info-circle me-2"></i>
-                    The page you requested could not be found. This might be due to a broken link, a typo in the URL, or the page may have been removed.
-                </div>
-
-                <div class="">
-                    <p class="">Here are some helpful links:</p>
-                    <a href="{% url 'core:home' %}" class="   me-3">
-                        <i class="fas fa-home me-2"></i>Go Home
-                    </a>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'accounts:member_dashboard' %}" class="  ">
-                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                        </a>
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="  ">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
+<section class="py-32 bg-brand-light flex items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="text-8xl font-bold text-brand-dark mb-4">404</div>
+        <h1 class="text-4xl font-bold text-brand-dark mb-4">Page Not Found</h1>
+        <p class="text-xl text-gray-600 mb-6">Sorry, the page you're looking for doesn't exist or has been moved.</p>
+        <p class="text-gray-600 mb-8">This might be due to a broken link, a typo in the URL, or the page may have been removed.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'core:home' %}" class="px-8 py-3 bg-brand-gradient text-white font-bold rounded-lg hover:opacity-90 transition">
+                <i class="fas fa-home mr-2"></i>Go Home
+            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:member_dashboard' %}" class="px-8 py-3 border-2 border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white font-bold rounded-lg transition">
+                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                </a>
+            {% endif %}
         </div>
     </div>
-</div>
-
-<style>
-    .error-section {
-        padding: 60px 0;
-    }
-    
-    .display-1 {
-        font-size: 5rem;
-        margin-bottom: 1rem;
-    }
-</style>
+</section>
 {% endblock %}

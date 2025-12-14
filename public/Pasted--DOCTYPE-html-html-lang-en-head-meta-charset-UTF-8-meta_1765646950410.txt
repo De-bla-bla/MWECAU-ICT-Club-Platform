@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Email - MWECAU ICT Club</title>
+    <title>Test Email - ICT Club</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
             background-color: #f4f4f4;
-            margin: 0;
             padding: 20px;
         }
-        .email-container {
+        . {
             max-width: 600px;
             margin: 0 auto;
             background-color: #ffffff;
@@ -22,10 +21,10 @@
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #2F3E8F 0%, #1E88C9 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 40px 20px;
-            text-align: center;
+            : center;
         }
         .header h1 {
             margin: 0;
@@ -33,62 +32,57 @@
             font-weight: 600;
         }
         .content {
-            padding: 40px 30px;
+            padding: 40px 20px;
         }
         .success-badge {
             background-color: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
-            padding: 15px 20px;
-            border-radius: 6px;
+            padding: 12px 20px;
+            border-radius: 4px;
             margin: 20px 0;
-            text-align: center;
+            : center;
             font-weight: 500;
         }
         .info-box {
             background-color: #e7f3ff;
-            border-left: 4px solid #2F3E8F;
+            border-left: 4px solid #667eea;
             padding: 15px;
             margin: 20px 0;
-            border-radius: 0 4px 4px 0;
         }
         .info-box strong {
-            color: #2F3E8F;
+            color: #667eea;
         }
         .footer {
             background-color: #f8f9fa;
             border-top: 1px solid #e9ecef;
             padding: 20px;
-            text-align: center;
+            : center;
             font-size: 12px;
             color: #666;
         }
         a {
-            color: #2F3E8F;
-            text-decoration: none;
+            color: #667eea;
+            : none;
         }
         a:hover {
-            text-decoration: underline;
-        }
-        ul {
-            padding-left: 20px;
-        }
-        li {
-            margin-bottom: 8px;
+            : underline;
         }
     </style>
 </head>
 <body>
-    <div class="email-container">
+    <div class="">
+        <!-- Header -->
         <div class="header">
-            <h1>Email Configuration Test</h1>
+            <h1>✓ Email Configuration Test</h1>
         </div>
         
+        <!-- Content -->
         <div class="content">
             <p>Hello{% if user %} {{ user.first_name }}{% endif %},</p>
             
             <div class="success-badge">
-                <strong>Email System is Working!</strong>
+                <strong>✓ Email System is Working!</strong>
             </div>
             
             <p>This is a test email from the ICT Club email system. If you're reading this, it means:</p>
@@ -109,9 +103,10 @@
             <p>You can safely ignore this test email. If you did not request this test or have concerns about your account, please contact us at <a href="mailto:mwecauictclub@gmail.com">mwecauictclub@gmail.com</a>.</p>
         </div>
         
+        <!-- Footer -->
         <div class="footer">
             <p>&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved.</p>
-            <p><a href="https://www.mwecauictclub.ac.tz/">Visit Our Website</a> | <a href="mailto:mwecauictclub@gmail.com">Contact Us</a></p>
+            <p><a href="https://mwecauictclub.com">Visit Our Website</a> | <a href="mailto:mwecauictclub@gmail.com">Contact Us</a></p>
         </div>
     </div>
 </body>

@@ -1,80 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Status Update - MWECAU ICT Club</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
-        . {
+        .email-container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         .header {
-            background-color: #e74c3c;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: white;
-            padding: 20px;
-            : center;
-            border-radius: 5px 5px 0 0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
         }
         .content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 0 0 5px 5px;
+            padding: 40px 30px;
+        }
+        .alert-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .info-box {
+            background-color: #e7f3ff;
+            border-left: 4px solid #2F3E8F;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
         }
         .footer {
-            : center;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 20px;
+            text-align: center;
             font-size: 12px;
-            color: #777;
-            margin-top: 20px;
+            color: #666;
         }
-        . {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 15px 0;
+        a {
+            color: #2F3E8F;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
         }
     </style>
 </head>
 <body>
-    <div class="">
+    <div class="email-container">
         <div class="header">
             <h1>Registration Status Update</h1>
         </div>
+        
         <div class="content">
             <p>Hello {{ user.full_name }},</p>
             
-            <div class="">
-                <strong>Unfortunately,</strong> your application for MWECAU ICT Club membership has been rejected.
+            <div class="alert-box">
+                <strong>Unfortunately,</strong> your application for MWECAU ICT Club membership has not been approved at this time.
             </div>
             
             <p>We appreciate your interest in joining MWECAU ICT Club. After reviewing your application, our leadership team has decided not to approve your membership at this time.</p>
             
-            <p><strong>Reason for Rejection:</strong></p>
-            <p>{{ reason_message }}</p>
+            <div class="info-box">
+                <strong>Reason for Decision:</strong><br>
+                {{ reason_message }}
+            </div>
             
             <p><strong>What Next?</strong></p>
-            <p>If you believe this decision was made in error or would like to reapply, please contact the club leadership directly through the official channels:</p>
+            <p>If you believe this decision was made in error or would like to reapply, please contact the club leadership directly:</p>
             <ul>
-                <li>Email: contact@mwecau-ict.edu</li>
+                <li>Email: <a href="mailto:mwecauictclub@gmail.com">mwecauictclub@gmail.com</a></li>
                 <li>Visit the club office during office hours</li>
                 <li>Contact your department leader</li>
             </ul>
             
-            <p>We appreciate your understanding, and we encourage you to stay involved with the club's activities and events as much as possible.</p>
+            <p>We appreciate your understanding, and we encourage you to stay involved with the club's public activities and events.</p>
             
             <p>Best regards,<br>
             <strong>MWECAU ICT Club Leadership</strong></p>
         </div>
+        
         <div class="footer">
-            <p>&copy; 2024 MWECAU ICT Club. All rights reserved.</p>
+            <p>&copy; 2024 ICT Club - Mwenge Catholic University. All rights reserved.</p>
+            <p><a href="https://www.mwecauictclub.ac.tz/">Visit Our Website</a> | <a href="mailto:mwecauictclub@gmail.com">Contact Us</a></p>
         </div>
     </div>
 </body>
