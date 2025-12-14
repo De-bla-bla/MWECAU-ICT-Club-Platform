@@ -3,126 +3,217 @@
 {% block title %}Manage Members - ICT Club{% endblock %}
 
 {% block content %}
-<div class="-fluid ">
-    <div class=" ">
-        <div class="">
-            <h2>Department Members</h2>
-            <p class="">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ page_obj.paginator.count }} total members)</p>
+<div class="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                        <i class="fas fa-users text-blue-600 mr-3"></i>Department Members
+                    </h1>
+                    <p class="text-gray-600">
+                        Managing <span class="font-semibold text-gray-900">{{ page_obj.paginator.count }}</span> total members 
+                        • Page <span class="font-semibold">{{ page_obj.number }}</span> of <span class="font-semibold">{{ page_obj.paginator.num_pages }}</span>
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="">
-            <!-- Filter Buttons -->
-            <div class=" flex-wrap" role="group">
-                <a href="?filter=all&page=1" class="  {% if filter_type == 'all' %}{% else %}-primary{% endif %}">
-                    All ({{ page_obj.paginator.count }})
+
+        <!-- Filter Section -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <i class="fas fa-filter text-blue-600 mr-2"></i>Filter Members
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- All Members -->
+                <a href="?filter=all&page=1" 
+                   class="group px-4 py-3 rounded-lg font-semibold text-center transition-all {% if filter_type == 'all' %}bg-gray-900 text-white shadow-lg{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
+                    <i class="fas fa-list mr-2"></i>
+                    <div>All</div>
+                    <small class="block mt-1 text-xs {% if filter_type == 'all' %}text-gray-200{% else %}text-gray-600 group-hover:text-gray-900{% endif %}">
+                        {{ page_obj.paginator.count }} total
+                    </small>
                 </a>
-                <a href="?filter=approved&page=1" class="  {% if filter_type == 'approved' %}{% else %}-success{% endif %}">
-                    Approved ({{ approved_count }})
+
+                <!-- Approved Members -->
+                <a href="?filter=approved&page=1" 
+                   class="group px-4 py-3 rounded-lg font-semibold text-center transition-all {% if filter_type == 'approved' %}bg-green-600 text-white shadow-lg{% else %}bg-green-50 text-green-700 hover:bg-green-100{% endif %}">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <div>Approved</div>
+                    <small class="block mt-1 text-xs {% if filter_type == 'approved' %}text-green-100{% else %}text-green-600 group-hover:text-green-900{% endif %}">
+                        {{ approved_count }} members
+                    </small>
                 </a>
-                <a href="?filter=pending&page=1" class="  {% if filter_type == 'pending' %}{% else %}-warning{% endif %}">
-                    Pending ({{ pending_count }})
+
+                <!-- Pending Members -->
+                <a href="?filter=pending&page=1" 
+                   class="group px-4 py-3 rounded-lg font-semibold text-center transition-all {% if filter_type == 'pending' %}bg-amber-600 text-white shadow-lg{% else %}bg-amber-50 text-amber-700 hover:bg-amber-100{% endif %}">
+                    <i class="fas fa-clock mr-2"></i>
+                    <div>Pending</div>
+                    <small class="block mt-1 text-xs {% if filter_type == 'pending' %}text-amber-100{% else %}text-amber-600 group-hover:text-amber-900{% endif %}">
+                        {{ pending_count }} members
+                    </small>
                 </a>
-                <a href="?filter=rejected&page=1" class="  {% if filter_type == 'rejected' %}{% else %}-danger{% endif %}">
-                    Rejected ({{ rejected_count }})
+
+                <!-- Rejected Members -->
+                <a href="?filter=rejected&page=1" 
+                   class="group px-4 py-3 rounded-lg font-semibold text-center transition-all {% if filter_type == 'rejected' %}bg-red-600 text-white shadow-lg{% else %}bg-red-50 text-red-700 hover:bg-red-100{% endif %}">
+                    <i class="fas fa-times-circle mr-2"></i>
+                    <div>Rejected</div>
+                    <small class="block mt-1 text-xs {% if filter_type == 'rejected' %}text-red-100{% else %}text-red-600 group-hover:text-red-900{% endif %}">
+                        {{ rejected_count }} members
+                    </small>
                 </a>
             </div>
         </div>
-    </div>
-    
-    {% if members %}
-        <div class="">
-            < class=" ">
-                <thead class="">
-                    <tr>
-                        <th>Name</th>
-                        <th>Reg Number</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Registered</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for member in members %}
-                        <tr>
-                            <td>{{ member.full_name }}</td>
-                            <td><code>{{ member.reg_number }}</code></td>
-                            <td>{{ member.email }}</td>
-                            <td>
-                                {% if not member.is_active %}
-                                    <span class="badge ">Rejected</span>
-                                {% elif member.is_approved %}
-                                    <span class="badge ">Approved</span>
-                                {% else %}
-                                    <span class="badge ">Pending</span>
-                                {% endif %}
-                            </td>
-                            <td><small>{{ member.registered_at|date:"M d, Y" }}</small></td>
-                            <td>
-                                {% if member.is_active and not member.is_approved %}
-                                    <form method="post" action="{% url 'accounts:approve_member' member.pk %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="  ">Approve</button>
-                                    </form>
-                                    <form method="post" action="{% url 'accounts:reject_member' member.pk %}" style="display: inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="  " onclick="return confirm('Are you sure?')">Reject</button>
-                                    </form>
-                                {% elif member.is_active and member.is_approved %}
-                                    <span class=" small">✓ Approved</span>
-                                {% else %}
-                                    <span class=" small">✗ Rejected</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </>
-        </div>
-        
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
-            <nav aria-label="Page navigation" class="">
-                <ul class="pagination justify-content-center">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?filter={{ filter_type }}&page=1">First</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?filter={{ filter_type }}&page={{ page_obj.previous_page_number }}">Previous</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">First</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
-                        </li>
-                    {% endif %}
-                    
-                    <li class="page-item active">
-                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                    </li>
-                    
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?filter={{ filter_type }}&page={{ page_obj.next_page_number }}">Next</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?filter={{ filter_type }}&page={{ page_obj.paginator.num_pages }}">Last</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">Next</span>
-                        </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Last</span>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+
+        <!-- Members Table -->
+        {% if members %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                            <tr>
+                                <th class="px-6 py-4 text-left font-bold">Name</th>
+                                <th class="px-6 py-4 text-left font-bold">Registration</th>
+                                <th class="px-6 py-4 text-left font-bold">Email</th>
+                                <th class="px-6 py-4 text-left font-bold">Status</th>
+                                <th class="px-6 py-4 text-left font-bold">Registered</th>
+                                <th class="px-6 py-4 text-left font-bold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            {% for member in members %}
+                                <tr class="hover:bg-blue-50 transition-colors">
+                                    <!-- Name -->
+                                    <td class="px-6 py-4 font-semibold text-gray-900">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-white font-bold">
+                                                {{ member.full_name|first|upper }}
+                                            </div>
+                                            <span>{{ member.full_name }}</span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Registration Number -->
+                                    <td class="px-6 py-4">
+                                        <code class="bg-gray-100 px-3 py-1 rounded text-sm font-mono text-gray-700">{{ member.reg_number }}</code>
+                                    </td>
+
+                                    <!-- Email -->
+                                    <td class="px-6 py-4 text-gray-700">
+                                        <a href="mailto:{{ member.email }}" class="text-blue-600 hover:underline">
+                                            {{ member.email|truncatechars:25 }}
+                                        </a>
+                                    </td>
+
+                                    <!-- Status Badge -->
+                                    <td class="px-6 py-4">
+                                        {% if not member.is_active %}
+                                            <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
+                                                <i class="fas fa-times-circle"></i>
+                                                <span>Rejected</span>
+                                            </span>
+                                        {% elif member.is_approved %}
+                                            <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle"></i>
+                                                <span>Approved</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-semibold bg-amber-100 text-amber-800">
+                                                <i class="fas fa-clock"></i>
+                                                <span>Pending</span>
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Registered Date -->
+                                    <td class="px-6 py-4 text-sm text-gray-600">
+                                        <i class="fas fa-calendar mr-2"></i>{{ member.registered_at|date:"M d, Y" }}
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center space-x-2">
+                                            {% if member.is_active and not member.is_approved %}
+                                                <form method="post" action="{% url 'accounts:approve_member' member.pk %}" class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" 
+                                                            class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition flex items-center space-x-1"
+                                                            title="Approve this member">
+                                                        <i class="fas fa-check"></i>
+                                                        <span>Approve</span>
+                                                    </button>
+                                                </form>
+                                                <form method="post" action="{% url 'accounts:reject_member' member.pk %}" class="inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" 
+                                                            class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition flex items-center space-x-1"
+                                                            onclick="return confirm('Are you sure you want to reject this member?')"
+                                                            title="Reject this member">
+                                                        <i class="fas fa-times"></i>
+                                                        <span>Reject</span>
+                                                    </button>
+                                                </form>
+                                            {% elif member.is_active and member.is_approved %}
+                                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded text-sm font-semibold flex items-center space-x-1">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    <span>Approved</span>
+                                                </span>
+                                            {% else %}
+                                                <span class="px-3 py-1 bg-red-100 text-red-800 rounded text-sm font-semibold flex items-center space-x-1">
+                                                    <i class="fas fa-times-circle"></i>
+                                                    <span>Rejected</span>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="mt-8 flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?filter={{ filter_type }}&page=1" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold text-gray-700">
+                                <i class="fas fa-chevron-left mr-1"></i>First
+                            </a>
+                            <a href="?filter={{ filter_type }}&page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold text-gray-700">
+                                Previous
+                            </a>
+                        {% endif %}
+
+                        <span class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                        </span>
+
+                        {% if page_obj.has_next %}
+                            <a href="?filter={{ filter_type }}&page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold text-gray-700">
+                                Next
+                            </a>
+                            <a href="?filter={{ filter_type }}&page={{ page_obj.paginator.num_pages }}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 font-semibold text-gray-700">
+                                Last<i class="fas fa-chevron-right ml-1"></i>
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">No members found</h3>
+                <p class="text-gray-600">No members match the selected filter. Try adjusting your filter criteria.</p>
+            </div>
         {% endif %}
-    {% else %}
-        <div class=" ">No members found with the selected filter.</div>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -4,148 +4,335 @@
 {% block title %}Register - ICT Club{% endblock %}
 
 {% block content %}
-<div class="">
-    <div class=" justify-content-center  ">
-        <div class="">
-            <div class="">
-                <div class="-header  ">
-                    <h4 class=""><i class="fas fa-user-plus me-2"></i>Join ICT Club</h4>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto">
+        <!-- Card Container -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header Section -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-10 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-user-plus text-white text-4xl"></i>
                 </div>
-                <div class="-body ">
-                    <p class=" ">Create your account to join the ICT Club</p>
+                <h1 class="text-3xl font-bold text-white mb-2">Join ICT Club</h1>
+                <p class="text-blue-100 text-sm">Create your account to join the community</p>
+            </div>
+
+            <!-- Body Section -->
+            <div class="px-8 py-8">
+                <!-- Form -->
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
                     
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        
-                        {% if form.non_field_errors %}
-                        <div class="   fade show" role="">
-                            {{ form.non_field_errors }}
-                            <button type="button" class="" data-bs-dismiss=""></button>
+                    <!-- Non-field errors -->
+                    {% if form.non_field_errors %}
+                    <div class="p-4 rounded-lg bg-red-50 border border-red-300 text-red-800 alert alert-danger fade show" role="alert">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-circle text-red-600 mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
                         </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Registration Number Field -->
+                    <div>
+                        <label for="{{ form.reg_number.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.reg_number.label }} <span class="text-red-600">*</span>
+                        </label>
+                        {{ form.reg_number }}
+                        <small class="text-gray-600 text-xs block mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>Format: T/XXXX/YYYY/NNNN (e.g., T/DEG/2025/001)
+                        </small>
+                        {% if form.reg_number.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.reg_number.errors.0 }}
+                            </div>
                         {% endif %}
-                        
-                        <div class="">
-                            <label for="{{ form.reg_number.id_for_label }}" class="">
-                                {{ form.reg_number.label }}
-                            </label>
-                            {{ form.reg_number }}
-                            {% if form.reg_number.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.reg_number.errors.0 }}
-                                </div>
-                            {% endif %}
-                            <small class="   ">
-                                Format: T/XXXX/YYYY/NNNN (e.g., T/DEG/2025/001)
-                            </small>
-                        </div>
-                        
-                        <div class="">
-                            <label for="{{ form.full_name.id_for_label }}" class="">
-                                {{ form.full_name.label }}
-                            </label>
-                            {{ form.full_name }}
-                            {% if form.full_name.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.full_name.errors.0 }}
-                                </div>
-                            {% endif %}
-                            <small class="   ">
-                                FirstName LastName Surname (2-3 parts)
-                            </small>
-                        </div>
-                        
-                        <div class="">
-                            <label for="{{ form.email.id_for_label }}" class="">
-                                {{ form.email.label }}
-                            </label>
-                            {{ form.email }}
-                            {% if form.email.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.email.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="">
-                            <label for="{{ form.course.id_for_label }}" class="">
-                                {{ form.course.label }}
-                            </label>
-                            {{ form.course }}
-                            {% if form.course.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.course.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="">
-                            <label for="{{ form.department.id_for_label }}" class="">
-                                {{ form.department.label }}
-                            </label>
-                            {{ form.department }}
-                            {% if form.department.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.department.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="">
-                            <label for="{{ form.password1.id_for_label }}" class="">
-                                {{ form.password1.label }}
-                            </label>
+                    </div>
+
+                    <!-- Full Name Field -->
+                    <div>
+                        <label for="{{ form.full_name.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.full_name.label }} <span class="text-red-600">*</span>
+                        </label>
+                        {{ form.full_name }}
+                        <small class="text-gray-600 text-xs block mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>FirstName LastName Surname (2-3 parts)
+                        </small>
+                        {% if form.full_name.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.full_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.email.label }} <span class="text-red-600">*</span>
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Course Field -->
+                    <div>
+                        <label for="{{ form.course.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.course.label }} <span class="text-red-600">*</span>
+                        </label>
+                        {{ form.course }}
+                        {% if form.course.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.course.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Department Field -->
+                    <div>
+                        <label for="{{ form.department.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.department.label }} <span class="text-red-600">*</span>
+                        </label>
+                        {{ form.department }}
+                        {% if form.department.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.department.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password Field with Strength Indicator -->
+                    <div>
+                        <label for="{{ form.password1.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.password1.label }} <span class="text-red-600">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-key text-gray-400"></i>
+                            </div>
                             {{ form.password1 }}
-                            {% if form.password1.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.password1.errors.0 }}
-                                </div>
-                            {% endif %}
+                            <button 
+                                type="button" 
+                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
+                                onclick="togglePassword('id_password1')"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                         
-                        <div class="">
-                            <label for="{{ form.password2.id_for_label }}" class="">
-                                {{ form.password2.label }}
-                            </label>
+                        <!-- Password Strength Indicator -->
+                        <div class="mt-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <small class="text-gray-600">Password strength:</small>
+                                <small id="strength-text" class="text-sm font-semibold text-gray-500">Enter password</small>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="strength-bar" class="h-2 rounded-full transition-all duration-300" style="width: 0%; background-color: #gray;"></div>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-600">
+                                <p><i class="fas fa-check-circle text-gray-400 mr-1" id="length-check"></i>At least 8 characters</p>
+                                <p><i class="fas fa-check-circle text-gray-400 mr-1" id="upper-check"></i>Uppercase letter</p>
+                                <p><i class="fas fa-check-circle text-gray-400 mr-1" id="number-check"></i>Number</p>
+                                <p><i class="fas fa-check-circle text-gray-400 mr-1" id="special-check"></i>Special character (!@#$%)</p>
+                            </div>
+                        </div>
+
+                        {% if form.password1.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.password1.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div>
+                        <label for="{{ form.password2.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                            {{ form.password2.label }} <span class="text-red-600">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-key text-gray-400"></i>
+                            </div>
                             {{ form.password2 }}
-                            {% if form.password2.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.password2.errors.0 }}
-                                </div>
-                            {% endif %}
+                            <button 
+                                type="button" 
+                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
+                                onclick="togglePassword('id_password2')"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
-                        
-                        <div class="">
-                            <div class="">
-                                {{ form.accept_terms }}
-                                <label class="" for="{{ form.accept_terms.id_for_label }}">
+                        {% if form.password2.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.password2.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="flex items-start space-x-3">
+                            {{ form.accept_terms }}
+                            <div>
+                                <label class="text-sm text-gray-700" for="{{ form.accept_terms.id_for_label }}">
                                     {{ form.accept_terms.label }}
-                                    <a href="{% url 'core:terms_conditions' %}" target="_blank" class="ms-1">
-                                        <i class="fas fa-external-link-alt"></i>View Terms
+                                    <a href="{% url 'core:terms_conditions' %}" target="_blank" class="text-blue-600 hover:text-blue-800 font-semibold">
+                                        <i class="fas fa-external-link-alt"></i> View Terms
                                     </a>
                                 </label>
                             </div>
-                            {% if form.accept_terms.errors %}
-                                <div class="invalid-feedback ">
-                                    {{ form.accept_terms.errors.0 }}
-                                </div>
-                            {% endif %}
                         </div>
-                        
-                        <button type="submit" class="  w-100 ">
-                            <i class="fas fa-user-plus me-2"></i>Create Account
-                        </button>
-                    </form>
-                    
-                    <hr>
-                    <p class=" ">
+                        {% if form.accept_terms.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.accept_terms.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 flex items-center justify-center space-x-2"
+                    >
+                        <i class="fas fa-user-plus"></i>
+                        <span>Create Account</span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="mt-8 flex items-center">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="px-4 text-gray-500 text-sm">or</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                <!-- Login Link -->
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600 text-sm">
                         Already have an account? 
-                        <a href="{% url 'accounts:login' %}">Login here</a>
+                        <a href="{% url 'accounts:login' %}" class="font-bold text-blue-600 hover:text-blue-800 transition">
+                            Login here
+                        </a>
                     </p>
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-500 text-xs mt-6">
+            © 2025 MWECAU ICT Club. All rights reserved.
+        </p>
     </div>
 </div>
 
-<script src="{% static 'js/password-strength.js' %}"></script>
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const btn = event.target.closest('button');
+    if (field.type === 'password') {
+        field.type = 'text';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        field.type = 'password';
+        btn.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+
+// Password Strength Checker
+document.getElementById('id_password1').addEventListener('input', function() {
+    const password = this.value;
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    const lengthCheck = document.getElementById('length-check');
+    const upperCheck = document.getElementById('upper-check');
+    const numberCheck = document.getElementById('number-check');
+    const specialCheck = document.getElementById('special-check');
+    
+    let strength = 0;
+    let strengthLabel = 'Weak';
+    let strengthColor = '#ef4444'; // red
+    
+    // Check criteria
+    const hasLength = password.length >= 8;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*]/.test(password);
+    
+    // Update checkmarks
+    if (hasLength) {
+        lengthCheck.classList.remove('text-gray-400');
+        lengthCheck.classList.add('text-green-600');
+        strength++;
+    } else {
+        lengthCheck.classList.remove('text-green-600');
+        lengthCheck.classList.add('text-gray-400');
+    }
+    
+    if (hasUpper) {
+        upperCheck.classList.remove('text-gray-400');
+        upperCheck.classList.add('text-green-600');
+        strength++;
+    } else {
+        upperCheck.classList.remove('text-green-600');
+        upperCheck.classList.add('text-gray-400');
+    }
+    
+    if (hasNumber) {
+        numberCheck.classList.remove('text-gray-400');
+        numberCheck.classList.add('text-green-600');
+        strength++;
+    } else {
+        numberCheck.classList.remove('text-green-600');
+        numberCheck.classList.add('text-gray-400');
+    }
+    
+    if (hasSpecial) {
+        specialCheck.classList.remove('text-gray-400');
+        specialCheck.classList.add('text-green-600');
+        strength++;
+    } else {
+        specialCheck.classList.remove('text-green-600');
+        specialCheck.classList.add('text-gray-400');
+    }
+    
+    // Set strength level
+    if (password.length === 0) {
+        strengthLabel = 'Enter password';
+        strengthColor = '#d1d5db';
+        strengthBar.style.width = '0%';
+    } else if (strength <= 2) {
+        strengthLabel = 'Weak';
+        strengthColor = '#ef4444';
+        strengthBar.style.width = '25%';
+    } else if (strength === 3) {
+        strengthLabel = 'Good';
+        strengthColor = '#f59e0b';
+        strengthBar.style.width = '75%';
+    } else {
+        strengthLabel = 'Strong';
+        strengthColor = '#10b981';
+        strengthBar.style.width = '100%';
+    }
+    
+    strengthText.textContent = strengthLabel;
+    strengthText.className = 'text-sm font-semibold';
+    
+    if (strengthLabel === 'Weak') {
+        strengthText.classList.add('text-red-600');
+    } else if (strengthLabel === 'Good') {
+        strengthText.classList.add('text-amber-600');
+    } else {
+        strengthText.classList.add('text-green-600');
+    }
+    
+    strengthBar.style.backgroundColor = strengthColor;
+});
+</script>
 {% endblock %}

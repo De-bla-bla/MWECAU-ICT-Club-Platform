@@ -1,64 +1,145 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login - ICT Club{% endblock %}
 
 {% block content %}
-<div class="">
-    <div class=" justify-content-center  ">
-        <div class="">
-            <div class="">
-                <div class="-header  ">
-                    <h4 class=""><i class="fas fa-sign-in-alt me-2"></i>Login</h4>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md">
+        <!-- Card Container -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header Section -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-10 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-lock text-white text-4xl"></i>
                 </div>
-                <div class="-body ">
-                    <p class=" ">Sign in to your ICT Club account</p>
-                    
-                    {% if messages %}
-                        {% for message in messages %}
-                        <div class=" -{{ message.tags }}  fade show" role="">
-                            {{ message }}
-                            <button type="button" class="" data-bs-dismiss=""></button>
+                <h1 class="text-3xl font-bold text-white mb-2">Login</h1>
+                <p class="text-blue-100 text-sm">Sign in to your ICT Club account</p>
+            </div>
+
+            <!-- Body Section -->
+            <div class="px-8 py-8">
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-300 text-red-800 alert alert-{{ message.tags }} fade show" role="alert">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-circle mr-3 text-red-600"></i>
+                            <span>{{ message }}</span>
+                            <button type="button" class="ms-auto" data-bs-dismiss="alert" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                        {% endfor %}
-                    {% endif %}
-                    
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        
-                        <div class="">
-                            <label for="id_username" class="">
-                                Email or Username
-                            </label>
-                            <input type="text" name="username" id="id_username" class="" placeholder="Your email or username" required>
-                        </div>
-                        
-                        <div class="">
-                            <label for="id_password" class="">
-                                Password
-                            </label>
-                            <input type="password" name="password" id="id_password" class="" placeholder="Your password" required>
-                        </div>
-                        
-                        <button type="submit" class="  w-100 ">
-                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                        </button>
-                    </form>
-                    
-                    <hr>
-                    <p class="  ">
-                        Don't have an account? 
-                        <a href="{% url 'accounts:register' %}">Register here</a>
-                    </p>
-                    
-                    <div class="  ">
-                        <small>
-                            <i class="fas fa-info-circle me-1"></i>
-                            Your account must be approved by the club leadership before you can access all features.
-                        </small>
                     </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Form -->
+                <form method="post" class="space-y-5">
+                    {% csrf_token %}
+                    
+                    <!-- Username/Email Field -->
+                    <div>
+                        <label for="id_username" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Email or Username
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input 
+                                type="text" 
+                                name="username" 
+                                id="id_username" 
+                                class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition form-control" 
+                                placeholder="your.email@example.com or username" 
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div>
+                        <label for="id_password" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-key text-gray-400"></i>
+                            </div>
+                            <input 
+                                type="password" 
+                                name="password" 
+                                id="id_password" 
+                                class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition form-control" 
+                                placeholder="••••••••" 
+                                required
+                            >
+                            <button 
+                                type="button" 
+                                class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600"
+                                onclick="togglePassword('id_password')"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 flex items-center justify-center space-x-2"
+                    >
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="mt-8 flex items-center">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="px-4 text-gray-500 text-sm">or</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                <!-- Register Link -->
+                <div class="mt-8 text-center">
+                    <p class="text-gray-600 text-sm">
+                        Don't have an account? 
+                        <a href="{% url 'accounts:register' %}" class="font-bold text-blue-600 hover:text-blue-800 transition">
+                            Register here
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Info Box -->
+                <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p class="text-xs text-gray-600 flex items-start space-x-2">
+                        <i class="fas fa-info-circle text-blue-600 mt-0.5 flex-shrink-0"></i>
+                        <span>Your account must be approved by the club leadership before you can access all features.</span>
+                    </p>
                 </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-500 text-xs mt-6">
+            © 2025 MWECAU ICT Club. All rights reserved.
+        </p>
     </div>
 </div>
+
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const btn = event.target.closest('button');
+    if (field.type === 'password') {
+        field.type = 'text';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        field.type = 'password';
+        btn.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+</script>
 {% endblock %}
