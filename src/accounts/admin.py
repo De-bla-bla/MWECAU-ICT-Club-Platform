@@ -175,9 +175,9 @@ class CustomUserAdmin(BaseUserAdmin):
     send_picture_reminder.short_description = 'Send picture upload reminder'
 
 
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Course, CourseAdmin)
-admin.site.register(CustomUser, CustomUserAdmin)
 
 # Customize admin site
 admin.site.site_header = 'ICT Club Administration'
