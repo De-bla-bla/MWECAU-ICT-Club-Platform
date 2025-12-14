@@ -255,11 +255,16 @@ def department_members(request):
     elif filter_type == 'rejected':
         members = members.filter(is_active=False)
     
-    # Count different statuses for display
-    all_members = CustomUser.objects.all().order_by('-registered_at') if user.is_staff else members
-    approved_count = all_members.filter(is_approved=True, is_active=True).count()
-    pending_count = all_members.filter(is_approved=False, is_active=True).count()
-    rejected_count = all_members.filter(is_active=False).count()
+    # Count different statuses for display - count from correct source
+    # For staff: count from all members; for dept leaders: count from their department only
+    if user.is_staff:
+        base_members = CustomUser.objects.all().order_by('-registered_at')
+    else:
+        base_members = members  # Use department members for leaders
+    
+    approved_count = base_members.filter(is_approved=True, is_active=True).count()
+    pending_count = base_members.filter(is_approved=False, is_active=True).count()
+    rejected_count = base_members.filter(is_active=False).count()
     
     # Add pagination - 50 members per page
     paginator = Paginator(members, 50)

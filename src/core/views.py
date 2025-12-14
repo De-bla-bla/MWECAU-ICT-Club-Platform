@@ -22,14 +22,12 @@ class HomeView(TemplateView):
         context['departments'] = Department.objects.all()
         context['announcements'] = Announcement.objects.filter(published=True)[:3]
         
-        # Add member counts for each of the 6 departments (if user is authenticated)
+        # Add member counts for each department (optimized single query)
         if self.request.user.is_authenticated:
-            context['programming_count'] = Department.objects.filter(name__icontains='Programming').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Programming').exists() else 0
-            context['cybersecurity_count'] = Department.objects.filter(name__icontains='Cybersecurity').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Cybersecurity').exists() else 0
-            context['networking_count'] = Department.objects.filter(name__icontains='Networking').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Networking').exists() else 0
-            context['maintenance_count'] = Department.objects.filter(name__icontains='Computer Maintenance').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Computer Maintenance').exists() else 0
-            context['design_count'] = Department.objects.filter(name__icontains='Graphic Design').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Graphic Design').exists() else 0
-            context['ai_ml_count'] = Department.objects.filter(name__icontains='AI').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='AI').exists() else 0
+            departments = Department.objects.all()
+            for dept in departments:
+                dept.approved_members_count = dept.members.filter(is_approved=True).count()
+            context['dept_member_counts'] = {dept.name: dept.approved_members_count for dept in departments}
         
         return context
 
