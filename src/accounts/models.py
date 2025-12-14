@@ -92,7 +92,9 @@ class CustomUser(AbstractUser):
     department = models.ForeignKey(
         Department,
         on_delete=models.PROTECT,
-        related_name='members'
+        related_name='members',
+        null=True,
+        blank=True
     )
     is_approved = models.BooleanField(
         default=False,
