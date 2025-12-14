@@ -11,7 +11,7 @@ python manage.py test_email --check-config
 
 echo ""
 echo "=== Sending Test Email ==="
-python manage.py test_email --recipient=user@example.com
+python manage.py test_email --recipient=cleven2024@gmail.com
 
 echo ""
 echo "=== Sending Test Email to User ==="
@@ -57,7 +57,7 @@ echo ""
 echo "=== Send to Specific Email Addresses ==="
 python manage.py send_bulk_email \
   --type=manual \
-  --recipients=john@example.com,jane@example.com,admin@example.com \
+  --recipients=cleven2024@gmail.com,clevengodsontech@gmail.com,mwecauictclub@gmail.com,tulizanawewe@gmail.com \
   --subject="Custom Manual Email"
 
 
