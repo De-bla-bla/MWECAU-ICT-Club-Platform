@@ -41,31 +41,19 @@ class RegisterView(CreateView):
         return redirect(self.success_url)
     
     def _send_registration_email(self, user):
-        """Send registration confirmation to user, admin, and department leader"""
+        """Send registration confirmation to user and notify staff/department leader"""
         context = {
             'user': user,
             'department': user.department,
         }
         
         try:
-            # Email to user
+            # Email to user (staff notification is handled in email service)
             user_success, user_error = EmailService.send_registration_email(user, user.department)
             if user_success:
                 logger.info(f"Registration confirmation sent to {user.email}")
             else:
                 logger.warning(f"Failed to send registration email to {user.email}: {user_error}")
-            
-            # Email to admin (superusers)
-            admin_emails = list(CustomUser.objects.filter(is_staff=True).values_list('email', flat=True))
-            if admin_emails:
-                admin_results = EmailService.send_admin_notification(
-                    admin_emails=admin_emails,
-                    subject=f'New Registration: {user.full_name}',
-                    html_template='emails/new_registration_admin.html',
-                    context=context,
-                    plain_message=f'New member registration from {user.full_name}'
-                )
-                logger.info(f"Admin notifications sent - Successful: {admin_results['successful']}, Failed: {admin_results['failed']}")
             
             # Email to department leader
             if user.department and user.department.leader:
