@@ -78,10 +78,19 @@ class CustomUserCreationForm(UserCreationForm):
         return email.lower()
     
     def clean_reg_number(self):
-        reg_number = self.cleaned_data.get('reg_number').upper()
+        reg_number = self.cleaned_data.get('reg_number', '').upper().strip()
+        
+        if not reg_number:
+            raise ValidationError("Registration number is required.")
+        
         if CustomUser.objects.filter(reg_number__iexact=reg_number).exists():
             raise ValidationError("This registration number is already in use.")
-        validate_registration_number(reg_number)
+        
+        try:
+            validate_registration_number(reg_number)
+        except ValidationError as e:
+            raise ValidationError(f"Invalid registration number: {e.message}")
+        
         return reg_number
     
     def clean_password1(self):
@@ -101,12 +110,16 @@ class CustomUserCreationForm(UserCreationForm):
         """Override save to split full_name and use registration number as username"""
         user = super().save(commit=False)
         
-        # Use registration number as username
-        reg_number = self.cleaned_data.get('reg_number')
-        user.username = reg_number.upper()
+        # Use registration number as username (must be set and valid)
+        reg_number = self.cleaned_data.get('reg_number', '').upper().strip()
+        if not reg_number:
+            raise ValidationError("Registration number is required for username.")
+        
+        user.username = reg_number
+        user.reg_number = reg_number
         
         # Split full_name into first_name, last_name, and surname
-        full_name = self.cleaned_data.get('full_name').strip()
+        full_name = self.cleaned_data.get('full_name', '').strip()
         parts = full_name.split()
         
         if len(parts) >= 3:
@@ -118,12 +131,15 @@ class CustomUserCreationForm(UserCreationForm):
             user.last_name = parts[1]
             user.surname = ''
         else:
-            user.first_name = parts[0]
+            user.first_name = parts[0] if parts else ''
             user.last_name = ''
             user.surname = ''
         
+        # Ensure full_name is set
+        user.full_name = full_name
+        
         # Ensure department is set from cleaned data
-        if not user.department and 'department' in self.cleaned_data:
+        if 'department' in self.cleaned_data:
             user.department = self.cleaned_data['department']
         
         if commit:
