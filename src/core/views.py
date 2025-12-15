@@ -2,32 +2,52 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, Count, Prefetch
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 import logging
 from .models import Project, Event, Announcement, ContactMessage
-from accounts.models import Department
+from accounts.models import Department, CustomUser
 from accounts.email_service import EmailService
 
 logger = logging.getLogger(__name__)
 
 
 class HomeView(TemplateView):
-    """Home page"""
+    """Home page with optimized queries"""
     template_name = 'core/home.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['featured_projects'] = Project.objects.filter(featured=True)[:6]
-        context['recent_events'] = Event.objects.all()[:3]
-        context['departments'] = Department.objects.all()
-        context['announcements'] = Announcement.objects.filter(published=True)[:3]
         
-        # Add member counts for each department (optimized single query)
-        if self.request.user.is_authenticated:
-            departments = Department.objects.all()
-            for dept in departments:
-                dept.approved_members_count = dept.members.filter(is_approved=True).count()
-            context['dept_member_counts'] = {dept.name: dept.approved_members_count for dept in departments}
+        # Use select_related and prefetch_related for optimization
+        context['featured_projects'] = Project.objects.select_related(
+            'department', 'leader'
+        ).filter(featured=True)[:6]
+        
+        context['recent_events'] = Event.objects.select_related(
+            'department'
+        ).prefetch_related('attendees').order_by('-date')[:3]
+        
+        context['departments'] = Department.objects.select_related(
+            'leader'
+        ).prefetch_related(
+            Prefetch(
+                'members',
+                queryset=CustomUser.objects.filter(is_approved=True)
+            )
+        ).all()
+        
+        context['announcements'] = Announcement.objects.select_related(
+            'author', 'department'
+        ).filter(published=True).order_by('-created_at')[:3]
+        
+        # Calculate department stats in one place
+        if context['departments']:
+            context['dept_stats'] = {
+                dept.id: dept.members.filter(is_approved=True).count()
+                for dept in context['departments']
+            }
         
         return context
 
@@ -51,38 +71,61 @@ class DepartmentListView(ListView):
 
 
 class DepartmentDetailView(DetailView):
-    """Department detail page"""
+    """Department detail page with optimized queries"""
     model = Department
     template_name = 'core/department_detail.html'
     context_object_name = 'department'
     slug_field = 'slug'
     
+    def get_queryset(self):
+        """Optimize query with select_related and prefetch_related"""
+        return Department.objects.select_related('leader').prefetch_related(
+            Prefetch(
+                'members',
+                queryset=CustomUser.objects.filter(is_approved=True)
+            ),
+            'projects',
+            'events'
+        )
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         department = self.get_object()
+        
+        # Use prefetch data to avoid additional queries
         context['members_count'] = department.members.filter(is_approved=True).count()
-        context['projects'] = department.projects.filter(featured=True)[:6]
-        context['events'] = department.events.all()[:5]
+        context['projects'] = department.projects.select_related('leader').filter(
+            featured=True
+        )[:6]
+        context['events'] = department.events.select_related('department').order_by(
+            '-date'
+        )[:5]
+        
         return context
 
 
 class ProjectListView(ListView):
-    """List all projects"""
+    """List all projects with optimized queries"""
     model = Project
     template_name = 'core/project_list.html'
     context_object_name = 'projects'
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = Project.objects.all()
+        """Optimize with select_related and filter efficiently"""
+        queryset = Project.objects.select_related(
+            'department', 'leader'
+        ).prefetch_related('members')
+        
         department_slug = self.request.GET.get('department')
         if department_slug:
             queryset = queryset.filter(department__slug=department_slug)
+        
         return queryset.order_by('-featured', '-created_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['departments'] = Department.objects.all()
+        context['departments'] = Department.objects.values('id', 'name', 'slug').order_by('name')
         return context
 
 
