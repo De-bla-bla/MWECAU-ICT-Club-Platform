@@ -2,92 +2,139 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, Count, Prefetch
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.http import HttpResponseForbidden
 import logging
 from .models import Project, Event, Announcement, ContactMessage
-from accounts.models import Department
+from .rate_limiting import RateLimiter
+from accounts.models import Department, CustomUser
 from accounts.email_service import EmailService
 
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cache for 5 minutes
 class HomeView(TemplateView):
-    """Home page"""
+    """Home page with optimized queries and caching"""
     template_name = 'core/home.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['featured_projects'] = Project.objects.filter(featured=True)[:6]
-        context['recent_events'] = Event.objects.all()[:3]
-        context['departments'] = Department.objects.all()
-        context['announcements'] = Announcement.objects.filter(published=True)[:3]
         
-        # Add member counts for each of the 6 departments (if user is authenticated)
-        if self.request.user.is_authenticated:
-            context['programming_count'] = Department.objects.filter(name__icontains='Programming').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Programming').exists() else 0
-            context['cybersecurity_count'] = Department.objects.filter(name__icontains='Cybersecurity').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Cybersecurity').exists() else 0
-            context['networking_count'] = Department.objects.filter(name__icontains='Networking').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Networking').exists() else 0
-            context['maintenance_count'] = Department.objects.filter(name__icontains='Computer Maintenance').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Computer Maintenance').exists() else 0
-            context['design_count'] = Department.objects.filter(name__icontains='Graphic Design').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='Graphic Design').exists() else 0
-            context['ai_ml_count'] = Department.objects.filter(name__icontains='AI').first().members.filter(is_approved=True).count() if Department.objects.filter(name__icontains='AI').exists() else 0
+        # Use select_related and prefetch_related for optimization
+        context['featured_projects'] = Project.objects.select_related(
+            'department', 'leader'
+        ).filter(featured=True)[:6]
+        
+        context['recent_events'] = Event.objects.select_related(
+            'department'
+        ).prefetch_related('attendees').order_by('-event_date')[:3]
+        
+        context['departments'] = Department.objects.select_related(
+            'leader'
+        ).prefetch_related(
+            Prefetch(
+                'members',
+                queryset=CustomUser.objects.filter(is_approved=True)
+            )
+        ).all()
+        
+        context['announcements'] = Announcement.objects.select_related(
+            'created_by', 'department'
+        ).filter(published=True).order_by('-created_at')[:3]
         
         return context
 
 
+@method_decorator(cache_page(60 * 10), name='dispatch')  # Cache for 10 minutes
 class AboutView(TemplateView):
     """About ICT Club page"""
     template_name = 'core/about.html'
 
 
+@method_decorator(cache_page(60 * 10), name='dispatch')  # Cache for 10 minutes
 class FAQView(TemplateView):
     """FAQ page"""
     template_name = 'core/faq.html'
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cache for 5 minutes
 class DepartmentListView(ListView):
     """List all departments"""
     model = Department
     template_name = 'core/department_list.html'
     context_object_name = 'departments'
     paginate_by = 6
+    
+    def get_queryset(self):
+        return Department.objects.select_related('leader').prefetch_related(
+            Prefetch('members', queryset=CustomUser.objects.filter(is_approved=True))
+        )
 
 
 class DepartmentDetailView(DetailView):
-    """Department detail page"""
+    """Department detail page with optimized queries"""
     model = Department
     template_name = 'core/department_detail.html'
     context_object_name = 'department'
     slug_field = 'slug'
     
+    def get_queryset(self):
+        """Optimize query with select_related and prefetch_related"""
+        return Department.objects.select_related('leader').prefetch_related(
+            Prefetch(
+                'members',
+                queryset=CustomUser.objects.filter(is_approved=True)
+            ),
+            'projects',
+            'events'
+        )
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         department = self.get_object()
+        
+        # Use prefetch data to avoid additional queries
         context['members_count'] = department.members.filter(is_approved=True).count()
-        context['projects'] = department.projects.filter(featured=True)[:6]
-        context['events'] = department.events.all()[:5]
+        context['projects'] = department.projects.select_related('leader').filter(
+            featured=True
+        )[:6]
+        context['events'] = department.events.select_related('department').order_by(
+            '-event_date'
+        )[:5]
+        
         return context
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cache for 5 minutes
 class ProjectListView(ListView):
-    """List all projects"""
+    """List all projects with optimized queries"""
     model = Project
     template_name = 'core/project_list.html'
     context_object_name = 'projects'
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = Project.objects.all()
+        """Optimize with select_related and filter efficiently"""
+        queryset = Project.objects.select_related(
+            'department', 'leader'
+        ).prefetch_related('members')
+        
         department_slug = self.request.GET.get('department')
         if department_slug:
             queryset = queryset.filter(department__slug=department_slug)
+        
         return queryset.order_by('-featured', '-created_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['departments'] = Department.objects.all()
+        context['departments'] = Department.objects.values('id', 'name', 'slug').order_by('name')
         return context
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')  # Cache for 15 minutes
 class ProjectDetailView(DetailView):
     """Project detail page"""
     model = Project
@@ -96,6 +143,7 @@ class ProjectDetailView(DetailView):
     slug_field = 'slug'
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cache for 5 minutes
 class EventListView(ListView):
     """List all events"""
     model = Event
@@ -104,7 +152,7 @@ class EventListView(ListView):
     paginate_by = 12
     
     def get_queryset(self):
-        queryset = Event.objects.all()
+        queryset = Event.objects.select_related('department')
         department_slug = self.request.GET.get('department')
         if department_slug:
             queryset = queryset.filter(department__slug=department_slug)
@@ -116,6 +164,7 @@ class EventListView(ListView):
         return context
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  # Cache for 5 minutes
 class AnnouncementListView(ListView):
     """List all announcements"""
     model = Announcement
@@ -124,15 +173,27 @@ class AnnouncementListView(ListView):
     paginate_by = 10
     
     def get_queryset(self):
-        return Announcement.objects.filter(published=True).order_by('-created_at')
+        return Announcement.objects.select_related('created_by', 'department').filter(
+            published=True
+        ).order_by('-created_at')
 
 
 class ContactFormView(CreateView):
-    """Contact form page"""
+    """Contact form page with rate limiting to prevent spam"""
     model = ContactMessage
     template_name = 'core/contact.html'
     fields = ('name', 'email', 'phone', 'subject', 'message')
     success_url = reverse_lazy('core:home')
+    
+    def dispatch(self, request, *args, **kwargs):
+        """Check rate limit before processing request"""
+        # Allow 5 contact submissions per IP/user per hour
+        if RateLimiter.is_rate_limited(request, 'contact_form', max_attempts=5, window_seconds=3600):
+            logger.warning(f"Contact form spam attempt from {RateLimiter.get_client_identifier(request)}")
+            messages.error(request, 'Too many contact form submissions. Please try again later.')
+            return HttpResponseForbidden('Rate limit exceeded. Please try again later.')
+        
+        return super().dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -151,6 +212,7 @@ class ContactFormView(CreateView):
         return response
 
 
+@method_decorator(cache_page(60 * 10), name='dispatch')  # Cache for 10 minutes
 class PrivacyPolicyView(TemplateView):
     """Privacy Policy page"""
     template_name = 'core/privacy_policy.html'

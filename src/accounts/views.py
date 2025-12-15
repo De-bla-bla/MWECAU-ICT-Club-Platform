@@ -41,31 +41,19 @@ class RegisterView(CreateView):
         return redirect(self.success_url)
     
     def _send_registration_email(self, user):
-        """Send registration confirmation to user, admin, and department leader"""
+        """Send registration confirmation to user and notify staff/department leader"""
         context = {
             'user': user,
             'department': user.department,
         }
         
         try:
-            # Email to user
+            # Email to user (staff notification is handled in email service)
             user_success, user_error = EmailService.send_registration_email(user, user.department)
             if user_success:
                 logger.info(f"Registration confirmation sent to {user.email}")
             else:
                 logger.warning(f"Failed to send registration email to {user.email}: {user_error}")
-            
-            # Email to admin (superusers)
-            admin_emails = list(CustomUser.objects.filter(is_staff=True).values_list('email', flat=True))
-            if admin_emails:
-                admin_results = EmailService.send_admin_notification(
-                    admin_emails=admin_emails,
-                    subject=f'New Registration: {user.full_name}',
-                    html_template='emails/new_registration_admin.html',
-                    context=context,
-                    plain_message=f'New member registration from {user.full_name}'
-                )
-                logger.info(f"Admin notifications sent - Successful: {admin_results['successful']}, Failed: {admin_results['failed']}")
             
             # Email to department leader
             if user.department and user.department.leader:
@@ -99,9 +87,11 @@ class LoginView(View):
     
     def post(self, request):
         """Handle login form submission"""
-        username = request.POST.get('username')
+        username_or_email_or_reg = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        
+        # Authenticate using custom backend (supports email, reg number, or username)
+        user = authenticate(request, username=username_or_email_or_reg, password=password)
         
         if user is not None:
             login(request, user)
@@ -112,7 +102,7 @@ class LoginView(View):
             
             return redirect('accounts:member_dashboard')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid registration number, email, or password.')
             return redirect('accounts:login')
 
 
@@ -244,11 +234,11 @@ def department_members(request):
     # Get members based on user role
     if user.is_staff:
         # Admins see all members
-        members = CustomUser.objects.all().order_by('-registered_at')
+        members = CustomUser.objects.select_related('department', 'course').order_by('-registered_at')
     elif user.is_department_leader:
         # Department leaders see only their department members
         try:
-            members = user.led_department.members.all().order_by('-registered_at')
+            members = user.led_department.members.select_related('department', 'course').order_by('-registered_at')
         except Department.DoesNotExist:
             messages.error(request, 'You are not assigned as a leader to any department.')
             return redirect('accounts:member_dashboard')
@@ -265,11 +255,16 @@ def department_members(request):
     elif filter_type == 'rejected':
         members = members.filter(is_active=False)
     
-    # Count different statuses for display
-    all_members = CustomUser.objects.all().order_by('-registered_at') if user.is_staff else members
-    approved_count = all_members.filter(is_approved=True, is_active=True).count()
-    pending_count = all_members.filter(is_approved=False, is_active=True).count()
-    rejected_count = all_members.filter(is_active=False).count()
+    # Count different statuses for display - count from correct source
+    # For staff: count from all members; for dept leaders: count from their department only
+    if user.is_staff:
+        base_members = CustomUser.objects.all().order_by('-registered_at')
+    else:
+        base_members = members  # Use department members for leaders
+    
+    approved_count = base_members.filter(is_approved=True, is_active=True).count()
+    pending_count = base_members.filter(is_approved=False, is_active=True).count()
+    rejected_count = base_members.filter(is_active=False).count()
     
     # Add pagination - 50 members per page
     paginator = Paginator(members, 50)

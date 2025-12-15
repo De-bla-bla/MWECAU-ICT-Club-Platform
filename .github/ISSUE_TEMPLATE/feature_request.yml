@@ -1,0 +1,104 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement! Please describe your feature request clearly.
+
+  - type: input
+    id: title
+    attributes:
+      label: Feature Title
+      description: Brief title of the feature request
+      placeholder: Add two-factor authentication
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Describe the problem this feature would solve
+      placeholder: Currently, user accounts can be compromised if passwords are leaked...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your solution or feature
+      placeholder: Implement TOTP-based two-factor authentication...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Any alternative approaches you've considered
+      placeholder: We could also use SMS-based authentication, but...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical (Blocks other work)
+        - High (Important feature)
+        - Medium (Nice to have)
+        - Low (Can wait)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      options:
+        - Security
+        - Performance
+        - User Experience
+        - Developer Experience
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      description: What are the benefits of this feature?
+      placeholder: |
+        - Improved security
+        - Better user experience
+        - Compliance with security standards
+    validations:
+      required: false
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Links to similar features in other projects
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing feature requests
+          required: true
+        - label: This is not a duplicate
+          required: true
+        - label: This aligns with project goals
+          required: false

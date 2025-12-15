@@ -1,0 +1,93 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - 'CONTRIBUTORS.md'
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Validate documentation
+      run: |
+        python -m pip install --upgrade pip
+        pip install -q markdown
+        python -c "
+        import os
+        import markdown
+        
+        doc_files = [
+          'README.md',
+          'CONTRIBUTORS.md',
+          'SECURITY.md',
+          'docs/ARCHITECTURE.md',
+          'docs/DATABASE_DESIGN.md',
+          'docs/CHANGELOG.md'
+        ]
+        
+        for file in doc_files:
+          if os.path.exists(file):
+            with open(file) as f:
+              try:
+                markdown.markdown(f.read())
+                print(f'✓ {file} is valid markdown')
+              except Exception as e:
+                print(f'✗ {file} failed: {e}')
+          else:
+            print(f'⚠ {file} not found')
+        "
+    
+    - name: Check for broken links in documentation
+      run: |
+        python -c "
+        import os
+        import re
+        
+        def check_links(file_path):
+          with open(file_path) as f:
+            content = f.read()
+          
+          # Find markdown links
+          links = re.findall(r'\[([^\]]+)\]\(([^\)]+)\)', content)
+          
+          issues = []
+          for text, link in links:
+            # Skip external links
+            if link.startswith('http'):
+              continue
+            # Check if file exists
+            if not os.path.exists(link) and not os.path.exists(link.split('#')[0]):
+              issues.append(f'{link} not found')
+          
+          return issues
+        
+        doc_files = ['README.md', 'CONTRIBUTORS.md', 'SECURITY.md']
+        
+        for file in doc_files:
+          if os.path.exists(file):
+            issues = check_links(file)
+            if issues:
+              print(f'Issues in {file}:')
+              for issue in issues:
+                print(f'  - {issue}')
+            else:
+              print(f'✓ {file} links valid')
+        "
+    
+    - name: Documentation summary
+      run: |
+        echo "Documentation validation complete"
+        echo "---"
+        wc -l docs/*.md README.md CONTRIBUTORS.md SECURITY.md 2>/dev/null | tail -1

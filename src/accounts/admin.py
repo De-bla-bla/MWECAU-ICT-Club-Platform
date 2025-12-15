@@ -3,28 +3,45 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.utils import timezone
 from django.urls import reverse
-from django.db.models import Q
+from django.db.models import Q, Count, Prefetch
+from django.core.exceptions import ValidationError
 from .models import CustomUser, Department, Course
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
 class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'leader', 'member_count')
+    list_display = ('name', 'slug', 'leader', 'member_count', 'created_at')
     list_filter = ('created_at',)
-    search_fields = ('name', 'description')
+    search_fields = ('name', 'description', 'leader__email')
     prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('created_at', 'updated_at')
+    
+    def get_queryset(self, request):
+        """Optimize queryset with select_related"""
+        queryset = super().get_queryset(request)
+        return queryset.select_related('leader').annotate(
+            member_count=Count('members')
+        )
     
     def member_count(self, obj):
-        return obj.members.count()
+        """Use annotated count for efficiency"""
+        return obj.member_count
     member_count.short_description = 'Members'
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'member_count')
+    list_display = ('name', 'code', 'level', 'member_count')
+    list_filter = ('level',)
     search_fields = ('name', 'code')
     
+    def get_queryset(self, request):
+        """Optimize queryset with annotate"""
+        queryset = super().get_queryset(request)
+        return queryset.annotate(member_count=Count('members'))
+    
     def member_count(self, obj):
-        return obj.members.count()
+        """Use annotated count for efficiency"""
+        return obj.member_count
     member_count.short_description = 'Members'
 
 
@@ -85,6 +102,11 @@ class CustomUserAdmin(BaseUserAdmin):
     readonly_fields = ('registered_at', 'approved_at', 'picture_uploaded_at', 'date_joined', 'last_login', 'password_display')
     
     actions = ['approve_members', 'reject_members', 'send_picture_reminder']
+    
+    def get_queryset(self, request):
+        """Optimize queryset with select_related"""
+        queryset = super().get_queryset(request)
+        return queryset.select_related('department', 'course').prefetch_related('groups')
     
     def password_display(self, obj):
         """Display password information with change password link"""
@@ -175,9 +197,9 @@ class CustomUserAdmin(BaseUserAdmin):
     send_picture_reminder.short_description = 'Send picture upload reminder'
 
 
+admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Course, CourseAdmin)
-admin.site.register(CustomUser, CustomUserAdmin)
 
 # Customize admin site
 admin.site.site_header = 'ICT Club Administration'

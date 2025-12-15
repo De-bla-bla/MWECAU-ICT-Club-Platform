@@ -202,11 +202,24 @@ CLOUDINARY_API_SECRET=your-api-secret
 
 Comprehensive documentation is available in the `docs/` directory:
 
-- **Setup Guides** - Installation and configuration
-- **Feature Guides** - Detailed feature documentation
-- **Email System** - Email configuration and templates
-- **Code of Conduct** - Community guidelines
-- **Contributing** - How to contribute to the project
+### Core Documentation
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System architecture, components, and design patterns
+- **[DATABASE_DESIGN.md](docs/DATABASE_DESIGN.md)** - Database schema, ER diagrams, and queries
+- **[API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)** - REST API endpoints and usage
+
+### Guides & Setup
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
+- **[CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md)** - Community guidelines
+- **[CHANGELOG.md](docs/CHANGELOG.md)** - Version history and releases
+
+### Feature Guides
+- **[EMAIL_SYSTEM_GUIDE.md](docs/guides/EMAIL_SYSTEM_GUIDE.md)** - Email configuration
+- **[EMAIL_SYSTEM_COMPLETE.md](docs/guides/EMAIL_SYSTEM_COMPLETE.md)** - Complete email documentation
+- **[DOCKER_GUIDE.md](docs/setup/DOCKER_GUIDE.md)** - Docker setup and deployment
+
+### Deployment
+- **[DEPLOYMENT_READY.md](docs/deployment/DEPLOYMENT_READY.md)** - Production deployment guide
+- **[DOCKER_SETUP_SUMMARY.md](docs/setup/DOCKER_SETUP_SUMMARY.md)** - Docker Compose reference
 
 ---
 

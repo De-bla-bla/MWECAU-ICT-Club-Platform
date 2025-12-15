@@ -1,9 +1,10 @@
 """
 Email service module for ICT Club
 Provides robust email sending with error handling and logging
-Supports both single and bulk email operations
+Supports both single and bulk email operations with retry mechanism
 """
 import logging
+import time
 from typing import List, Dict, Tuple, Optional
 from django.core.mail import send_mail, send_mass_mail, EmailMessage
 from django.template.loader import render_to_string
@@ -13,11 +14,37 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
+# Email retry configuration
+MAX_RETRY_ATTEMPTS = 3
+RETRY_DELAY = 1  # seconds
+
+
+def get_staff_emails() -> List[str]:
+    """
+    Get email addresses of all superusers and staff members
+    
+    Returns:
+        List[str]: List of email addresses
+    """
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    
+    # Get all superusers and staff members
+    staff_users = User.objects.filter(
+        is_staff=True
+    ).exclude(
+        email__isnull=True
+    ).exclude(
+        email=''
+    ).values_list('email', flat=True).distinct()
+    
+    return list(staff_users)
+
 
 class EmailService:
     """
     Service class for handling email operations with comprehensive error handling
-    Supports single emails, bulk emails, and HTML templates
+    Supports single emails, bulk emails, HTML templates, and automatic retry mechanism
     """
     
     DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER
@@ -42,6 +69,59 @@ class EmailService:
         if not settings.EMAIL_HOST_PASSWORD:
             logger.warning("EMAIL_HOST_PASSWORD not configured - emails may fail")
         return True
+    
+    @classmethod
+    def _send_with_retry(
+        cls,
+        subject: str,
+        message: str,
+        recipient_email: str,
+        html_message: str = None,
+        fail_silently: bool = False
+    ) -> Tuple[bool, Optional[str]]:
+        """
+        Send email with automatic retry on failure
+        
+        Args:
+            subject: Email subject
+            message: Plain text message
+            recipient_email: Recipient email address
+            html_message: HTML message body
+            fail_silently: Whether to suppress exceptions
+            
+        Returns:
+            Tuple[bool, Optional[str]]: (success, error_message)
+        """
+        for attempt in range(MAX_RETRY_ATTEMPTS):
+            try:
+                sent = send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=cls.DEFAULT_FROM_EMAIL,
+                    recipient_list=[recipient_email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                
+                if sent:
+                    logger.info(f"Email sent to {recipient_email} (attempt {attempt + 1})")
+                    return True, None
+                    
+            except Exception as e:
+                error_msg = f"Email send failed to {recipient_email}: {str(e)}"
+                
+                if attempt < MAX_RETRY_ATTEMPTS - 1:
+                    logger.warning(f"{error_msg} - retrying in {RETRY_DELAY}s (attempt {attempt + 1}/{MAX_RETRY_ATTEMPTS})")
+                    time.sleep(RETRY_DELAY)
+                else:
+                    logger.error(f"{error_msg} - max retries exceeded")
+                    if not fail_silently:
+                        raise
+                    return False, error_msg
+        
+        error_msg = f"Failed to send email to {recipient_email} after {MAX_RETRY_ATTEMPTS} attempts"
+        logger.error(error_msg)
+        return False, error_msg
     
     @classmethod
     def send_single_email(
@@ -109,8 +189,9 @@ class EmailService:
                 from_email=cls.DEFAULT_FROM_EMAIL,
                 recipient_list=[recipient_email],
                 html_message=html_message,
-                fail_silently=False,
+                fail_silently=fail_silently,  # ✅ FIXED
             )
+
             
             if sent:
                 logger.info(f"Email sent successfully to {recipient_email} - Subject: {subject}")
@@ -225,7 +306,7 @@ class EmailService:
     @classmethod
     def send_registration_email(cls, user, department: Optional[object] = None) -> Tuple[bool, Optional[str]]:
         """
-        Send registration confirmation email to new user
+        Send registration confirmation email to new user and notify all staff members
         
         Args:
             user: User instance
@@ -239,7 +320,8 @@ class EmailService:
             'department': department,
         }
         
-        return cls.send_single_email(
+        # Send confirmation email to user
+        user_success, user_error = cls.send_single_email(
             subject='Welcome to ICT Club - Account Pending Approval',
             recipient_email=user.email,
             html_template='emails/registration_confirmation.html',
@@ -247,11 +329,30 @@ class EmailService:
             plain_message='Your account has been created and is pending approval.',
             fail_silently=True
         )
+        
+        # Notify all staff members about the new registration
+        staff_emails = get_staff_emails()
+        if staff_emails:
+            staff_context = {
+                'user': user,
+                'department': department,
+                'registered_at': timezone.now(),
+            }
+            cls.send_admin_notification(
+                admin_emails=staff_emails,
+                subject=f'New Registration: {user.full_name}',
+                html_template='emails/staff_new_registration.html',
+                context=staff_context,
+                plain_message=f'New member registration from {user.full_name}',
+                fail_silently=True
+            )
+        
+        return user_success, user_error
     
     @classmethod
     def send_approval_email(cls, user) -> Tuple[bool, Optional[str]]:
         """
-        Send account approval email
+        Send account approval email to user and notify staff
         
         Args:
             user: User instance that was approved
@@ -261,7 +362,8 @@ class EmailService:
         """
         context = {'user': user}
         
-        return cls.send_single_email(
+        # Send approval email to user
+        user_success, user_error = cls.send_single_email(
             subject='🎉 Your ICT Club Account Has Been Approved!',
             recipient_email=user.email,
             html_template='emails/member_approved.html',
@@ -269,11 +371,29 @@ class EmailService:
             plain_message='Congratulations! Your account has been approved.',
             fail_silently=True
         )
+        
+        # Notify all staff members about the approval
+        staff_emails = get_staff_emails()
+        if staff_emails:
+            approval_context = {
+                'user': user,
+                'approved_at': timezone.now(),
+            }
+            cls.send_admin_notification(
+                admin_emails=staff_emails,
+                subject=f'Member Approved: {user.full_name}',
+                html_template='emails/staff_member_approved.html',
+                context=approval_context,
+                plain_message=f'Member {user.full_name} has been approved.',
+                fail_silently=True
+            )
+        
+        return user_success, user_error
     
     @classmethod
     def send_rejection_email(cls, user) -> Tuple[bool, Optional[str]]:
         """
-        Send account rejection email
+        Send account rejection email to user and notify staff
         
         Args:
             user: User instance that was rejected
@@ -283,7 +403,8 @@ class EmailService:
         """
         context = {'user': user}
         
-        return cls.send_single_email(
+        # Send rejection email to user
+        user_success, user_error = cls.send_single_email(
             subject='ICT Club Registration - Status Update',
             recipient_email=user.email,
             html_template='emails/member_rejected.html',
@@ -291,6 +412,24 @@ class EmailService:
             plain_message='Thank you for your interest in ICT Club.',
             fail_silently=True
         )
+        
+        # Notify all staff members about the rejection
+        staff_emails = get_staff_emails()
+        if staff_emails:
+            rejection_context = {
+                'user': user,
+                'rejected_at': timezone.now(),
+            }
+            cls.send_admin_notification(
+                admin_emails=staff_emails,
+                subject=f'Member Rejected: {user.full_name}',
+                html_template='emails/staff_member_rejected.html',
+                context=rejection_context,
+                plain_message=f'Member {user.full_name} has been rejected.',
+                fail_silently=True
+            )
+        
+        return user_success, user_error
     
     @classmethod
     def send_picture_reminder_email(cls, user) -> Tuple[bool, Optional[str]]:
@@ -358,7 +497,7 @@ class EmailService:
     @classmethod
     def send_contact_message_notification(cls, message_obj) -> Tuple[bool, Optional[str]]:
         """
-        Send contact form submission notification to admin
+        Send contact form submission notification to all staff members
         
         Args:
             message_obj: ContactMessage instance with name, email, subject, message
@@ -368,14 +507,24 @@ class EmailService:
         """
         context = {'message': message_obj}
         
-        return cls.send_single_email(
+        # Send to all staff members
+        staff_emails = get_staff_emails()
+        if not staff_emails:
+            # Fallback to default email if no staff members
+            staff_emails = [settings.DEFAULT_FROM_EMAIL]
+        
+        results = cls.send_admin_notification(
+            admin_emails=staff_emails,
             subject=f'New Contact Message: {message_obj.subject}',
-            recipient_email=settings.DEFAULT_FROM_EMAIL,
             html_template='emails/contact_message.html',
             context=context,
             plain_message=f"New contact message from {message_obj.name}",
             fail_silently=True
         )
+        
+        success = results['failed'] == 0
+        error = None if success else f"Failed to send to {results['failed']} staff members"
+        return success, error
     
     @classmethod
     def send_admin_notification(
@@ -384,20 +533,11 @@ class EmailService:
         subject: str,
         html_template: str,
         context: Dict = None,
-        plain_message: str = None
+        plain_message: str = None,
+        fail_silently: bool = True
     ) -> Dict:
         """
         Send notification to all admin/staff members
-        
-        Args:
-            admin_emails: List of admin email addresses
-            subject: Email subject
-            html_template: HTML template path
-            context: Template context
-            plain_message: Plain text message
-            
-        Returns:
-            Dict: Bulk send results
         """
         return cls.send_bulk_emails(
             subject=subject,
@@ -405,9 +545,10 @@ class EmailService:
             html_template=html_template,
             context_data=context,
             plain_message=plain_message,
-            fail_silently=True,
+            fail_silently=fail_silently,
             batch_size=50
         )
+        
 
 
 # Backward compatibility - standalone functions

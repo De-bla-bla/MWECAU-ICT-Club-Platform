@@ -13,10 +13,8 @@ class Command(BaseCommand):
         # Create courses
         courses = [
             'Computer Science',
-            'Information Technology',
-            'Information Systems',
-            'Software Engineering',
-            'Computer Engineering',
+            'Education With ICT',
+            'Mathematics And Statistics'
         ]
         
         for course_name in courses:

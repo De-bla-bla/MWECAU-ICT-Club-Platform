@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.db.models import Prefetch
 from .models import Project, Event, Announcement, ContactMessage
 
 
@@ -25,6 +26,10 @@ class ProjectAdmin(admin.ModelAdmin):
         }),
     )
     
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('department', 'created_by')
+    
     def featured_badge(self, obj):
         if obj.featured:
             return format_html(
@@ -38,7 +43,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'event_date', 'department', 'location', 'created_at')
     list_filter = ('department', 'event_date', 'created_at')
     search_fields = ('title', 'description')
-    readonly_fields = ('created_at',)
+    readonly_fields = ('created_at', 'updated_at')
     fieldsets = (
         ('Event Information', {
             'fields': ('title', 'description', 'image')
@@ -47,10 +52,14 @@ class EventAdmin(admin.ModelAdmin):
             'fields': ('event_date', 'location', 'department')
         }),
         ('Timestamps', {
-            'fields': ('created_at',),
+            'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('department')
 
 
 class AnnouncementAdmin(admin.ModelAdmin):
@@ -73,6 +82,10 @@ class AnnouncementAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('department', 'created_by')
     
     def published_badge(self, obj):
         if obj.published:

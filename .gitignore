@@ -40,6 +40,8 @@ staticfiles/
 # =========================
 # Environment variables
 # =========================
+.env
+.env.*
 scripts/.env
 scripts/.env.*
 scripts/.env.local
@@ -95,4 +97,3 @@ celerybeat.pid
 # Logs
 # =========================
 *.log
-src/.env

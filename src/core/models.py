@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 
 class Project(models.Model):
@@ -35,9 +37,24 @@ class Project(models.Model):
         ordering = ['-featured', '-created_at']
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
+        indexes = [
+            models.Index(fields=['-featured', '-created_at']),
+            models.Index(fields=['department']),
+        ]
     
     def __str__(self):
         return self.title
+    
+    def clean(self):
+        """Validate model fields"""
+        if self.title:
+            self.title = self.title.strip()
+        if self.description and len(self.description.strip()) < 10:
+            raise ValidationError({'description': 'Description must be at least 10 characters'})
+        
+        # Auto-generate slug if not set
+        if not self.slug and self.title:
+            self.slug = slugify(self.title)
 
 
 class Event(models.Model):
@@ -59,14 +76,26 @@ class Event(models.Model):
         blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         ordering = ['-event_date']
         verbose_name = 'Event'
         verbose_name_plural = 'Events'
+        indexes = [
+            models.Index(fields=['-event_date']),
+            models.Index(fields=['department']),
+        ]
     
     def __str__(self):
         return self.title
+    
+    def clean(self):
+        """Validate model fields"""
+        if self.title:
+            self.title = self.title.strip()
+        if self.location:
+            self.location = self.location.strip()
 
 
 class Announcement(models.Model):
@@ -106,9 +135,20 @@ class Announcement(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Announcement'
         verbose_name_plural = 'Announcements'
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['published', '-created_at']),
+        ]
     
     def __str__(self):
         return self.title
+    
+    def clean(self):
+        """Validate model fields"""
+        if self.title:
+            self.title = self.title.strip()
+        if self.content and len(self.content.strip()) < 10:
+            raise ValidationError({'content': 'Content must be at least 10 characters'})
 
 
 class ContactMessage(models.Model):
@@ -125,6 +165,19 @@ class ContactMessage(models.Model):
         ordering = ['-created_at']
         verbose_name = 'Contact Message'
         verbose_name_plural = 'Contact Messages'
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['responded', '-created_at']),
+        ]
     
     def __str__(self):
         return f"{self.name} - {self.subject}"
+    
+    def clean(self):
+        """Validate model fields"""
+        if self.name:
+            self.name = self.name.strip()
+        if self.subject:
+            self.subject = self.subject.strip()
+        if self.message and len(self.message.strip()) < 10:
+            raise ValidationError({'message': 'Message must be at least 10 characters'})
